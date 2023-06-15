@@ -195,11 +195,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "year": {
-                    "type": "integer",
-                    "nullable": true,
-                    "example": 2023
-                  },
                   "startDate": {
                     "type": "integer",
                     "nullable": true,

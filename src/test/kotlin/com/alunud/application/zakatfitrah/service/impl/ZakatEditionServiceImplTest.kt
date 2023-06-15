@@ -41,7 +41,6 @@ class ZakatEditionServiceImplTest(
 
         assertNotNull(response)
 
-        assertNotNull(response.id)
         assertEquals(request.year, response.year)
         assertEquals(request.startDate, response.startDate)
         assertEquals(request.amountPerPerson, response.amountPerPerson)
@@ -93,7 +92,6 @@ class ZakatEditionServiceImplTest(
 
         assertNotNull(response)
 
-        assertEquals(zakat.id, response.id)
         assertEquals(zakat.year, response.year)
         assertEquals(zakat.amountPerPerson, response.amountPerPerson)
         assertEquals(zakat.startDate, response.startDate)
@@ -122,7 +120,6 @@ class ZakatEditionServiceImplTest(
 
         assertNotNull(response)
 
-        assertEquals(zakat.id, response.id)
         assertEquals(zakat.year, response.year)
         assertEquals(zakat.amountPerPerson, response.amountPerPerson)
         assertNotEquals(zakat.startDate, response.startDate)
@@ -151,7 +148,6 @@ class ZakatEditionServiceImplTest(
 
         assertNotNull(response)
 
-        assertEquals(zakat.id, response.id)
         assertEquals(zakat.year, response.year)
         assertEquals(zakat.amountPerPerson, response.amountPerPerson)
         assertEquals(zakat.startDate, response.startDate)
@@ -182,7 +178,6 @@ class ZakatEditionServiceImplTest(
 
         assertNotNull(response)
 
-        assertEquals(zakat.id, response.id)
         assertEquals(zakat.year, response.year)
         assertEquals(zakat.amountPerPerson, response.amountPerPerson)
         assertEquals(zakat.startDate, response.startDate)

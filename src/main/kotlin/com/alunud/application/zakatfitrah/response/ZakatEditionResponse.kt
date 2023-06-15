@@ -4,7 +4,6 @@ import com.alunud.application.zakatfitrah.entity.ZakatEdition
 import java.util.*
 
 data class ZakatEditionResponse(
-    val id: UUID,
     val year: Int,
     val startDate: Long,
     val endDate: Long?,
@@ -16,7 +15,6 @@ data class ZakatEditionResponse(
  */
 fun ZakatEdition.response() =
     ZakatEditionResponse(
-        id = this.id,
         year = this.year,
         startDate = this.startDate,
         endDate = this.endDate,

@@ -219,6 +219,28 @@ class ZakatEditionServiceImplTest(
     }
 
     @Test
+    fun `should not update zakat fitrah edition because invalid payload`() {
+        val zakat = ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2023,
+            startDate = 1681578000000,
+            amountPerPerson = 2.5,
+            endDate = null
+        )
+
+        zakatEditionRepository.save(zakat)
+
+        assertThrows<ConstraintViolationException> {
+            val request = UpdateZakatEditionDto(
+                startDate = 1681578000000,
+                endDate = 1681491600000
+            )
+
+            zakatEditionService.update(2023, request)
+        }
+    }
+
+    @Test
     fun `should throw error not found update zakat fitrah edition`() {
         assertThrows<NotFoundException> {
             val request = UpdateZakatEditionDto(

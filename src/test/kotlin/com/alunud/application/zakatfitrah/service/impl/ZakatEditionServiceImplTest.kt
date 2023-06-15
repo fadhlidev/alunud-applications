@@ -3,6 +3,7 @@ package com.alunud.application.zakatfitrah.service.impl
 import com.alunud.application.AlUnudApplication
 import com.alunud.application.zakatfitrah.dto.CreateZakatEditionDto
 import com.alunud.application.zakatfitrah.dto.UpdateZakatEditionDto
+import com.alunud.application.zakatfitrah.entity.ZakatEdition
 import com.alunud.application.zakatfitrah.repository.ZakatEditionRepository
 import com.alunud.application.zakatfitrah.service.ZakatEditionService
 import com.alunud.exception.NotFoundException
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import java.util.*
 
 @SpringBootTest(classes = [AlUnudApplication::class])
 @ActiveProfiles("test")
@@ -48,13 +50,15 @@ class ZakatEditionServiceImplTest(
 
     @Test
     fun `should update zakat fitrah edition's startDate and endDate`() {
-        val zakat = zakatEditionService.create(
-            CreateZakatEditionDto(
-                year = 2023,
-                startDate = 1681578000000,
-                amountPerPerson = 2.5
-            )
+        val zakat = ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2023,
+            startDate = 1681578000000,
+            amountPerPerson = 2.5,
+            endDate = null
         )
+
+        zakatEditionRepository.save(zakat)
 
         val request = UpdateZakatEditionDto(
             startDate = 1681578000000,
@@ -75,13 +79,15 @@ class ZakatEditionServiceImplTest(
 
     @Test
     fun `should update zakat fitrah edition's startDate`() {
-        val zakat = zakatEditionService.create(
-            CreateZakatEditionDto(
-                year = 2023,
-                startDate = 1681578000000,
-                amountPerPerson = 2.5
-            )
+        val zakat = ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2023,
+            startDate = 1681578000000,
+            amountPerPerson = 2.5,
+            endDate = null
         )
+
+        zakatEditionRepository.save(zakat)
 
         val request = UpdateZakatEditionDto(
             startDate = 1681664400000,
@@ -102,13 +108,15 @@ class ZakatEditionServiceImplTest(
 
     @Test
     fun `should update zakat fitrah edition's endDate`() {
-        val zakat = zakatEditionService.create(
-            CreateZakatEditionDto(
-                year = 2023,
-                startDate = 1681578000000,
-                amountPerPerson = 2.5
-            )
+        val zakat = ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2023,
+            startDate = 1681578000000,
+            amountPerPerson = 2.5,
+            endDate = null
         )
+
+        zakatEditionRepository.save(zakat)
 
         val request = UpdateZakatEditionDto(
             startDate = null,
@@ -131,13 +139,15 @@ class ZakatEditionServiceImplTest(
 
     @Test
     fun `should not update zakat fitrah edition's startDate nor endDate`() {
-        val zakat = zakatEditionService.create(
-            CreateZakatEditionDto(
-                year = 2023,
-                startDate = 1681578000000,
-                amountPerPerson = 2.5
-            )
+        val zakat = ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2023,
+            startDate = 1681578000000,
+            amountPerPerson = 2.5,
+            endDate = null
         )
+
+        zakatEditionRepository.save(zakat)
 
         val request = UpdateZakatEditionDto(
             startDate = null,

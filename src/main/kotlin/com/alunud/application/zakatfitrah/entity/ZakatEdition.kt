@@ -19,6 +19,8 @@ data class ZakatEdition(
 
     @field:Column(unique = true, nullable = true)
     var endDate: Long?,
+
+    @field:Column(updatable = false)
     val amountPerPerson: Double,
 
     @field:OneToMany(mappedBy = "zakatEdition", cascade = [ALL], fetch = LAZY)

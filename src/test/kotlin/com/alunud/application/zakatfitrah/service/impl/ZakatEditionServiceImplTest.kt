@@ -8,6 +8,7 @@ import com.alunud.application.zakatfitrah.repository.ZakatEditionRepository
 import com.alunud.application.zakatfitrah.service.ZakatEditionService
 import com.alunud.exception.EntityExistsException
 import com.alunud.exception.NotFoundException
+import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -49,7 +50,40 @@ class ZakatEditionServiceImplTest(
     }
 
     @Test
-    fun `should not create zakat fitrah edition`() {
+    fun `should not create zakat fitrah edition because invalid payload`() {
+        assertThrows<ConstraintViolationException> {
+            val request = CreateZakatEditionDto(
+                year = 1945,
+                startDate = 1681578000000,
+                amountPerPerson = 2.5
+            )
+
+            zakatEditionService.create(request)
+        }
+
+        assertThrows<ConstraintViolationException> {
+            val request = CreateZakatEditionDto(
+                year = 2023,
+                startDate = -1,
+                amountPerPerson = 2.5
+            )
+
+            zakatEditionService.create(request)
+        }
+
+        assertThrows<ConstraintViolationException> {
+            val request = CreateZakatEditionDto(
+                year = 2023,
+                startDate = 1681578000000,
+                amountPerPerson = 2.0
+            )
+
+            zakatEditionService.create(request)
+        }
+    }
+
+    @Test
+    fun `should not create zakat fitrah edition because its already exists`() {
         val zakat = ZakatEdition(
             id = UUID.randomUUID(),
             year = 2023,

@@ -47,4 +47,12 @@ class ZakatEditionServiceImpl(@Autowired private val zakatEditionRepository: Zak
         return zakat.response()
     }
 
+    @Transactional
+    override fun delete(year: Int) {
+        val zakat = zakatEditionRepository.findByYear(year)
+            ?: throw NotFoundException("Zakat fitrah $year edition not found")
+
+        zakatEditionRepository.delete(zakat)
+    }
+
 }

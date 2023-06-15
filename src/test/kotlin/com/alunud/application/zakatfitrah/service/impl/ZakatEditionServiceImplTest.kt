@@ -177,4 +177,28 @@ class ZakatEditionServiceImplTest(
         }
     }
 
+    @Test
+    fun `should delete zakat fitrah edition`() {
+        val zakat = ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2023,
+            startDate = 1681578000000,
+            amountPerPerson = 2.5,
+            endDate = null
+        )
+
+        zakatEditionRepository.save(zakat)
+
+        zakatEditionService.delete(zakat.year)
+
+        assertNull(zakatEditionRepository.findByYear(zakat.year))
+    }
+
+    @Test
+    fun `should throw error not found delete zakat fitrah edition`() {
+        assertThrows<NotFoundException> {
+            zakatEditionService.delete(2023)
+        }
+    }
+
 }

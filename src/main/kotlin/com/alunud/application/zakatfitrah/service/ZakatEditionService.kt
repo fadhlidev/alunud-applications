@@ -7,4 +7,5 @@ import com.alunud.application.zakatfitrah.response.ZakatEditionResponse
 interface ZakatEditionService {
     fun create(dto: CreateZakatEditionDto): ZakatEditionResponse
     fun update(year: Int, dto: UpdateZakatEditionDto): ZakatEditionResponse
+    fun delete(year: Int)
 }

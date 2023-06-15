@@ -16,7 +16,11 @@ data class UpdateZakatEditionDto(
 
     @AssertTrue(message = "End date cannot be less than or equal to start date")
     fun isEndDateGreaterThanStartDate(): Boolean {
-        return endDate != null && (startDate == null || endDate > startDate)
+        if (startDate != null && endDate != null) {
+            return endDate > startDate
+        }
+
+        return true
     }
 
 }

@@ -12,11 +12,11 @@ data class ZakatEdition(
     val id: UUID,
 
     @Column(name = "\"year\"")
-    val year: Int,
-    val startDate: Long,
+    var year: Int,
+    var startDate: Long,
 
     @field:Column(nullable = true)
-    val endDate: Long?,
+    var endDate: Long?,
     val amountPerPerson: Double,
 
     @field:OneToMany(mappedBy = "zakatEdition", cascade = [ALL], fetch = LAZY)

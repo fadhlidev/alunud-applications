@@ -11,11 +11,13 @@ data class ZakatEdition(
     @field:Id
     val id: UUID,
 
-    @Column(name = "\"year\"")
+    @field:Column(unique = true, name = "\"year\"")
     var year: Int,
+
+    @field:Column(unique = true)
     var startDate: Long,
 
-    @field:Column(nullable = true)
+    @field:Column(unique = true, nullable = true)
     var endDate: Long?,
     val amountPerPerson: Double,
 

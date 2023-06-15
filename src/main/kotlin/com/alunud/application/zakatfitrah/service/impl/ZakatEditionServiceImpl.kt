@@ -7,6 +7,7 @@ import com.alunud.application.zakatfitrah.repository.ZakatEditionRepository
 import com.alunud.application.zakatfitrah.response.ZakatEditionResponse
 import com.alunud.application.zakatfitrah.response.response
 import com.alunud.application.zakatfitrah.service.ZakatEditionService
+import com.alunud.exception.EntityExistsException
 import com.alunud.exception.NotFoundException
 import jakarta.transaction.Transactional
 import lombok.extern.slf4j.Slf4j
@@ -28,6 +29,10 @@ class ZakatEditionServiceImpl(@Autowired private val zakatEditionRepository: Zak
             endDate = null,
             amountPerPerson = dto.amountPerPerson
         )
+
+        zakatEditionRepository.findByYear(zakat.year)?.let {
+            throw EntityExistsException("")
+        }
 
         zakatEditionRepository.save(zakat)
         return zakat.response()

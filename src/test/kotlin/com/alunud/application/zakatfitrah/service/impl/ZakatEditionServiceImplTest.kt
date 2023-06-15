@@ -6,6 +6,7 @@ import com.alunud.application.zakatfitrah.dto.UpdateZakatEditionDto
 import com.alunud.application.zakatfitrah.entity.ZakatEdition
 import com.alunud.application.zakatfitrah.repository.ZakatEditionRepository
 import com.alunud.application.zakatfitrah.service.ZakatEditionService
+import com.alunud.exception.EntityExistsException
 import com.alunud.exception.NotFoundException
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
@@ -46,6 +47,29 @@ class ZakatEditionServiceImplTest(
         assertEquals(request.amountPerPerson, response.amountPerPerson)
         assertEquals(request.year, response.year)
         assertNull(response.endDate)
+    }
+
+    @Test
+    fun `should not create zakat fitrah edition`() {
+        val zakat = ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2023,
+            startDate = 1681578000000,
+            amountPerPerson = 2.5,
+            endDate = null
+        )
+
+        zakatEditionRepository.save(zakat)
+
+        assertThrows<EntityExistsException> {
+            val request = CreateZakatEditionDto(
+                year = 2023,
+                startDate = 1681578000000,
+                amountPerPerson = 2.5
+            )
+
+            zakatEditionService.create(request)
+        }
     }
 
     @Test

@@ -9,16 +9,18 @@ import java.util.*
 data class ZakatPayer(
     @field:Id
     val id: UUID,
+
+    @field:Column(updatable = false)
     val submittedTime: Long,
-    val name: String,
+    var name: String,
 
     @field:Column(nullable = true)
-    val address: String?,
-    val totalPeople: Int,
-    val totalAmount: Double,
-    val excessAmount: Double,
-    val lessAmount: Double,
-    val excessAmountReturned: Boolean,
+    var address: String?,
+    var totalPeople: Int,
+    var totalAmount: Double,
+    var excessAmount: Double,
+    var lessAmount: Double,
+    var excessAmountReturned: Boolean,
 
     @field:ManyToOne(fetch = LAZY)
     @field:JoinColumn(name = "zakat_id")

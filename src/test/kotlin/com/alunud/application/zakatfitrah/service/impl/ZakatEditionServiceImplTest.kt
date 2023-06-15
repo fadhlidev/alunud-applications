@@ -225,4 +225,39 @@ class ZakatEditionServiceImplTest(
         }
     }
 
+    @Test
+    fun `should returns list of zakat fitrah edition`() {
+        zakatEditionRepository.save(ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2021,
+            startDate = 1620234000000,
+            amountPerPerson = 2.5,
+            endDate = null
+        ))
+
+        assertEquals(1, zakatEditionService.findAll().size)
+
+        zakatEditionRepository.save(ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2022,
+            startDate = 1650819600000,
+            amountPerPerson = 2.5,
+            endDate = null
+        ))
+
+        zakatEditionRepository.save(ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2023,
+            startDate = 1681578000000,
+            amountPerPerson = 2.5,
+            endDate = null
+        ))
+
+        val result = zakatEditionService.findAll()
+        assertEquals(3, result.size)
+        assertEquals(2021, result[0].year)
+        assertEquals(2022, result[1].year)
+        assertEquals(2023, result[2].year)
+    }
+
 }

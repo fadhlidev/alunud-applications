@@ -12,6 +12,7 @@ import com.alunud.exception.NotFoundException
 import jakarta.transaction.Transactional
 import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -58,6 +59,11 @@ class ZakatEditionServiceImpl(@Autowired private val zakatEditionRepository: Zak
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
 
         zakatEditionRepository.delete(zakat)
+    }
+
+    @Transactional
+    override fun findAll(): List<ZakatEditionResponse> {
+        return zakatEditionRepository.findAll(Sort.by("year")).map { it.response() }
     }
 
 }

@@ -8,4 +8,5 @@ interface ZakatEditionService {
     fun create(dto: CreateZakatEditionDto): ZakatEditionResponse
     fun update(year: Int, dto: UpdateZakatEditionDto): ZakatEditionResponse
     fun delete(year: Int)
+    fun findAll(): List<ZakatEditionResponse>
 }

@@ -9,6 +9,7 @@ import com.alunud.application.zakatfitrah.response.response
 import com.alunud.application.zakatfitrah.service.ZakatEditionService
 import com.alunud.exception.EntityExistsException
 import com.alunud.exception.NotFoundException
+import com.alunud.util.Validators
 import jakarta.transaction.Transactional
 import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,11 +19,16 @@ import java.util.*
 
 @Service
 @Slf4j
-class ZakatEditionServiceImpl(@Autowired private val zakatEditionRepository: ZakatEditionRepository) :
+class ZakatEditionServiceImpl(
+    @Autowired private val zakatEditionRepository: ZakatEditionRepository,
+    @Autowired private val validators: Validators
+) :
     ZakatEditionService {
 
     @Transactional
     override fun create(dto: CreateZakatEditionDto): ZakatEditionResponse {
+        validators.validate(dto)
+
         val zakat = ZakatEdition(
             id = UUID.randomUUID(),
             year = dto.year,
@@ -41,6 +47,8 @@ class ZakatEditionServiceImpl(@Autowired private val zakatEditionRepository: Zak
 
     @Transactional
     override fun update(year: Int, dto: UpdateZakatEditionDto): ZakatEditionResponse {
+        validators.validate(dto)
+
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
 

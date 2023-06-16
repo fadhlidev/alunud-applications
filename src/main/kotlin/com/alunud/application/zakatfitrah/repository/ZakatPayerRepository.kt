@@ -10,4 +10,5 @@ import java.util.*
 @Repository
 interface ZakatPayerRepository : JpaRepository<ZakatPayer, UUID> {
     fun findAllByZakatEdition(edition: ZakatEdition, sort: Sort): List<ZakatPayer>
+    fun findByZakatEditionAndId(edition: ZakatEdition, id: UUID): ZakatPayer?
 }

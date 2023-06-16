@@ -62,7 +62,7 @@ class ZakatPayerServiceImpl(
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
 
-        val payer = zakatPayerRepository.findByIdOrNull(id)
+        val payer = zakatPayerRepository.findByZakatEditionAndId(zakat, id)
             ?: throw NotFoundException("Zakat fitrah payer ($id) not found")
 
         payer.apply {
@@ -91,7 +91,7 @@ class ZakatPayerServiceImpl(
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
 
-        val payer = zakatPayerRepository.findByIdOrNull(id)
+        val payer = zakatPayerRepository.findByZakatEditionAndId(zakat, id)
             ?: throw NotFoundException("Zakat fitrah payer ($id) not found")
 
         zakatPayerRepository.delete(payer)

@@ -53,8 +53,8 @@ class ZakatEditionServiceImpl(
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
 
         zakat.apply {
-            zakat.startDate = dto.startDate ?: zakat.startDate
-            zakat.endDate = dto.endDate ?: zakat.endDate
+            this.startDate = dto.startDate ?: this.startDate
+            this.endDate = dto.endDate ?: this.endDate
         }
 
         zakatEditionRepository.save(zakat)

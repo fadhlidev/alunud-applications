@@ -19,6 +19,9 @@ data class ZakatPayerDescription(
     val excessAmountReturned: Boolean
 )
 
+/**
+ * Return response object of Zakat Payer
+ */
 fun ZakatPayer.response() = ZakatPayerResponse(
     id = this.id,
     name = this.name,

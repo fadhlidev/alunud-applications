@@ -6,13 +6,16 @@ import com.alunud.application.zakatfitrah.entity.ZakatPayer
 import com.alunud.application.zakatfitrah.repository.ZakatEditionRepository
 import com.alunud.application.zakatfitrah.repository.ZakatPayerRepository
 import com.alunud.application.zakatfitrah.response.ZakatPayerResponse
+import com.alunud.application.zakatfitrah.response.ZakatPayerSimpleResponse
 import com.alunud.application.zakatfitrah.response.response
+import com.alunud.application.zakatfitrah.response.simpleResponse
 import com.alunud.application.zakatfitrah.service.ZakatPayerService
 import com.alunud.exception.NotFoundException
 import com.alunud.util.Validators
 import jakarta.transaction.Transactional
 import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.*
@@ -92,6 +95,14 @@ class ZakatPayerServiceImpl(
             ?: throw NotFoundException("Zakat fitrah payer ($id) not found")
 
         zakatPayerRepository.delete(payer)
+    }
+
+    @Transactional
+    override fun findAll(year: Int): List<ZakatPayerSimpleResponse> {
+        val zakat = zakatEditionRepository.findByYear(year)
+            ?: throw NotFoundException("Zakat fitrah $year edition not found")
+
+        return zakatPayerRepository.findAllByZakatEdition(zakat, Sort.by("submittedTime")).map { it.simpleResponse() }
     }
 
 }

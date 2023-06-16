@@ -16,7 +16,6 @@ import jakarta.transaction.Transactional
 import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -119,6 +118,17 @@ class ZakatPayerServiceImpl(
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
 
         return zakatPayerRepository.findAllByZakatEdition(zakat, Sort.by("submittedTime")).map { it.simpleResponse() }
+    }
+
+    @Transactional
+    override fun findOne(year: Int, id: UUID): ZakatPayerResponse {
+        val zakat = zakatEditionRepository.findByYear(year)
+            ?: throw NotFoundException("Zakat fitrah $year edition not found")
+
+        val payer = zakatPayerRepository.findByZakatEditionAndId(zakat, id)
+            ?: throw NotFoundException("Zakat fitrah payer ($id) not found")
+
+        return payer.response()
     }
 
 }

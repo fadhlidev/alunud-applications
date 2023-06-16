@@ -331,37 +331,65 @@ class ZakatPayerServiceImplTest(
 
     @Test
     fun `should returns list of zakat fitrah payers`() {
-        zakatPayerRepository.save(ZakatPayer(
-            id = UUID.randomUUID(),
-            name = "Wahid",
-            address = "Pojok 2/3",
-            totalPeople = 1,
-            totalAmount = 3.0,
-            excessAmountReturned = false,
-            excessAmount = 0.5,
-            lessAmount = 0.0,
-            submittedTime = System.currentTimeMillis(),
-            zakatEdition = zakat
-        ))
+        zakatPayerRepository.save(
+            ZakatPayer(
+                id = UUID.randomUUID(),
+                name = "Wahid",
+                address = "Pojok 2/3",
+                totalPeople = 1,
+                totalAmount = 3.0,
+                excessAmountReturned = false,
+                excessAmount = 0.5,
+                lessAmount = 0.0,
+                submittedTime = System.currentTimeMillis(),
+                zakatEdition = zakat
+            )
+        )
 
         assertEquals(1, zakatPayerService.findAll(zakat.year).size)
 
-        zakatPayerRepository.save(ZakatPayer(
-            id = UUID.randomUUID(),
-            name = "Isnaini",
-            address = "Pojok 2/3",
-            totalPeople = 2,
-            totalAmount = 5.0,
-            excessAmountReturned = true,
-            excessAmount = 0.0,
-            lessAmount = 0.0,
-            submittedTime = System.currentTimeMillis(),
-            zakatEdition = zakat
-        ))
+        zakatPayerRepository.save(
+            ZakatPayer(
+                id = UUID.randomUUID(),
+                name = "Isnaini",
+                address = "Pojok 2/3",
+                totalPeople = 2,
+                totalAmount = 5.0,
+                excessAmountReturned = true,
+                excessAmount = 0.0,
+                lessAmount = 0.0,
+                submittedTime = System.currentTimeMillis(),
+                zakatEdition = zakat
+            )
+        )
 
-        zakatPayerRepository.save(ZakatPayer(
+        zakatPayerRepository.save(
+            ZakatPayer(
+                id = UUID.randomUUID(),
+                name = "Salasa",
+                address = "Pojok 2/3",
+                totalPeople = 4,
+                totalAmount = 11.0,
+                excessAmountReturned = true,
+                excessAmount = 1.0,
+                lessAmount = 0.0,
+                submittedTime = System.currentTimeMillis(),
+                zakatEdition = zakat
+            )
+        )
+
+        val result = zakatPayerService.findAll(zakat.year)
+        assertEquals(3, result.size)
+        assertEquals("Wahid", result[0].name)
+        assertEquals("Isnaini", result[1].name)
+        assertEquals("Salasa", result[2].name)
+    }
+
+    @Test
+    fun `should find zakat fitrah payer`() {
+        val payer = ZakatPayer(
             id = UUID.randomUUID(),
-            name = "Salasa",
+            name = "Fulan",
             address = "Pojok 2/3",
             totalPeople = 4,
             totalAmount = 11.0,
@@ -370,13 +398,50 @@ class ZakatPayerServiceImplTest(
             lessAmount = 0.0,
             submittedTime = System.currentTimeMillis(),
             zakatEdition = zakat
-        ))
+        )
 
-        val result = zakatPayerService.findAll(zakat.year)
-        assertEquals(3, result.size)
-        assertEquals("Wahid", result[0].name)
-        assertEquals("Isnaini", result[1].name)
-        assertEquals("Salasa", result[2].name)
+        zakatPayerRepository.save(payer)
+
+        val response = zakatPayerService.findOne(zakat.year, payer.id)
+
+        assertNotNull(response)
+
+        assertEquals(payer.name, response.name)
+        assertEquals(payer.address, response.address)
+        assertEquals(payer.totalPeople, response.zakat.totalPeople)
+        assertEquals(payer.totalAmount, response.zakat.totalAmount)
+        assertEquals(payer.excessAmountReturned, response.zakat.excessAmountReturned)
+        assertEquals(1.0, response.zakat.excessAmount)
+        assertEquals(0.0, response.zakat.lessAmount)
+    }
+
+    @Test
+    fun `should throw not found edition when finding zakat fitrah payer`() {
+        val payer = ZakatPayer(
+            id = UUID.randomUUID(),
+            name = "Fulan",
+            address = "Pojok 2/3",
+            totalPeople = 4,
+            totalAmount = 11.0,
+            excessAmountReturned = true,
+            excessAmount = 1.0,
+            lessAmount = 0.0,
+            submittedTime = System.currentTimeMillis(),
+            zakatEdition = zakat
+        )
+
+        zakatPayerRepository.save(payer)
+
+        assertThrows<NotFoundException> {
+            zakatPayerService.findOne(2022, payer.id)
+        }
+    }
+
+    @Test
+    fun `should throw not found payer when finding zakat fitrah payer`() {
+        assertThrows<NotFoundException> {
+            zakatPayerService.findOne(zakat.year, UUID.randomUUID())
+        }
     }
 
 }

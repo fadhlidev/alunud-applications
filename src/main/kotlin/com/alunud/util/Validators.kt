@@ -13,4 +13,10 @@ class Validators(private val validator: Validator) {
         }
     }
 
+    fun invalid(message: String, block: () -> Boolean) {
+        if (block()) {
+            throw ConstraintViolationException(message, null)
+        }
+    }
+
 }

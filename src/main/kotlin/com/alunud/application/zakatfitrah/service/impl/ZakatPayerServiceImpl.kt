@@ -35,11 +35,18 @@ class ZakatPayerServiceImpl(
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
 
+        val currentTime = System.currentTimeMillis()
+        zakat.endDate?.let {
+            validators.invalid("Cannot add data on an expired edition") {
+                currentTime > it
+            }
+        }
+
         val expectedTotalAmount = zakat.amountPerPerson * dto.totalPeople
 
         val payer = ZakatPayer(
             id = UUID.randomUUID(),
-            submittedTime = System.currentTimeMillis(),
+            submittedTime = currentTime,
             name = dto.name,
             address = dto.address,
             totalPeople = dto.totalPeople,

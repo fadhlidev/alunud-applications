@@ -80,6 +80,31 @@ class ZakatPayerServiceImplTest(
     }
 
     @Test
+    fun `should not create zakat fitrah payer because edition already ended`() {
+        val zakat = ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2022,
+            startDate = 1620234000000,
+            amountPerPerson = 2.5,
+            endDate = 1618074000000
+        )
+
+        zakatEditionRepository.save(zakat)
+
+        assertThrows<ConstraintViolationException> {
+            val request = CreateZakatPayerDto(
+                name = "Fulan",
+                address = "Pojok 2/3",
+                totalPeople = 4,
+                totalAmount = 11.0,
+                excessAmountReturned = true
+            )
+
+            zakatPayerService.create(zakat.year, request)
+        }
+    }
+
+    @Test
     fun `should not create zakat fitrah payer because invalid payload`() {
         assertThrows<ConstraintViolationException> {
             val request = CreateZakatPayerDto(

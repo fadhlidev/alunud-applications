@@ -12,6 +12,7 @@ import com.alunud.exception.NotFoundException
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,6 +28,23 @@ class ZakatPayerServiceImplTest(
     @Autowired val zakatEditionRepository: ZakatEditionRepository
 ) {
 
+    lateinit var zakat: ZakatEdition
+
+    @BeforeEach
+    fun createZakatEdition() {
+        val zakat = ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2023,
+            startDate = 1681578000000,
+            amountPerPerson = 2.5,
+            endDate = null
+        )
+
+        zakatEditionRepository.save(zakat)
+
+        this.zakat = zakat
+    }
+
     @AfterEach
     fun cleanZakatPayerRepository() {
         zakatPayerRepository.deleteAll()
@@ -39,16 +57,6 @@ class ZakatPayerServiceImplTest(
 
     @Test
     fun `should create zakat fitrah payer`() {
-        val zakat = ZakatEdition(
-            id = UUID.randomUUID(),
-            year = 2023,
-            startDate = 1681578000000,
-            amountPerPerson = 2.5,
-            endDate = null
-        )
-
-        zakatEditionRepository.save(zakat)
-
         val request = CreateZakatPayerDto(
             name = "Fulan",
             address = "Pojok 2/3",
@@ -74,16 +82,6 @@ class ZakatPayerServiceImplTest(
 
     @Test
     fun `should not create zakat fitrah payer because invalid payload`() {
-        val zakat = ZakatEdition(
-            id = UUID.randomUUID(),
-            year = 2023,
-            startDate = 1681578000000,
-            amountPerPerson = 2.5,
-            endDate = null
-        )
-
-        zakatEditionRepository.save(zakat)
-
         assertThrows<ConstraintViolationException> {
             val request = CreateZakatPayerDto(
                 name = "",
@@ -144,22 +142,12 @@ class ZakatPayerServiceImplTest(
                 excessAmountReturned = true
             )
 
-            zakatPayerService.create(2023, request)
+            zakatPayerService.create(2022, request)
         }
     }
 
     @Test
     fun `should update zakat fitrah payer`() {
-        val zakat = ZakatEdition(
-            id = UUID.randomUUID(),
-            year = 2023,
-            startDate = 1681578000000,
-            amountPerPerson = 2.5,
-            endDate = null
-        )
-
-        zakatEditionRepository.save(zakat)
-
         val payer = ZakatPayer(
             id = UUID.randomUUID(),
             name = "Fulan",
@@ -199,16 +187,6 @@ class ZakatPayerServiceImplTest(
 
     @Test
     fun `should not update zakat fitrah payer because invalid payload`() {
-        val zakat = ZakatEdition(
-            id = UUID.randomUUID(),
-            year = 2023,
-            startDate = 1681578000000,
-            amountPerPerson = 2.5,
-            endDate = null
-        )
-
-        zakatEditionRepository.save(zakat)
-
         val payer = ZakatPayer(
             id = UUID.randomUUID(),
             name = "Fulan",
@@ -290,16 +268,6 @@ class ZakatPayerServiceImplTest(
 
     @Test
     fun `should not update zakat fitrah payer because payer doesnt exists`() {
-        val zakat = ZakatEdition(
-            id = UUID.randomUUID(),
-            year = 2023,
-            startDate = 1681578000000,
-            amountPerPerson = 2.5,
-            endDate = null
-        )
-
-        zakatEditionRepository.save(zakat)
-
         assertThrows<NotFoundException> {
             val request = UpdateZakatPayerDto(
                 name = "Fulanah",

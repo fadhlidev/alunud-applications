@@ -300,6 +300,10 @@
                             "type": "string",
                             "example": "1c29dd29-9577-4d8b-91b7-9f1aae4a5b92"
                           },
+                          "submittedTime": {
+                            "type": "integer",
+                            "example": 1681893000000
+                          },
                           "name": {
                             "type": "string",
                             "example": "Fulan"

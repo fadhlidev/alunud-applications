@@ -46,10 +46,20 @@ class ZakatPayerServiceImpl(
             totalPeople = dto.totalPeople,
             totalAmount = dto.totalAmount,
             excessAmountReturned = dto.excessAmountReturned,
-            excessAmount = dto.totalAmount - expectedTotalAmount,
-            lessAmount = expectedTotalAmount - dto.totalAmount,
+            excessAmount = 0.0,
+            lessAmount = 0.0,
             zakatEdition = zakat
         )
+
+        payer.apply {
+            if (dto.totalAmount > expectedTotalAmount) {
+                this.excessAmount = dto.totalAmount - expectedTotalAmount
+            }
+
+            if (dto.totalAmount < expectedTotalAmount) {
+                this.lessAmount = expectedTotalAmount - dto.totalAmount
+            }
+        }
 
         zakatPayerRepository.save(payer)
         return payer.response()
@@ -76,8 +86,14 @@ class ZakatPayerServiceImpl(
 
                 dto.totalAmount?.let { totalAmount ->
                     this.totalAmount = totalAmount
-                    this.excessAmount = totalAmount - expectedTotalAmount
-                    this.lessAmount = expectedTotalAmount - totalAmount
+
+                    if (totalAmount > expectedTotalAmount) {
+                        this.excessAmount = totalAmount - expectedTotalAmount
+                    }
+
+                    if (totalAmount < expectedTotalAmount) {
+                        this.lessAmount = expectedTotalAmount - totalAmount
+                    }
                 }
             }
         }

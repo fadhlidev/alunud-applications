@@ -75,10 +75,8 @@ class ZakatPayerServiceImplTest(
         assertEquals(request.totalPeople, response.zakat.totalPeople)
         assertEquals(request.totalAmount, response.zakat.totalAmount)
         assertEquals(request.excessAmountReturned, response.zakat.excessAmountReturned)
-
-        val expectedTotalAmount = zakat.amountPerPerson * response.zakat.totalPeople
-        assertEquals(request.totalAmount - expectedTotalAmount, response.zakat.excessAmount)
-        assertEquals(expectedTotalAmount - request.totalAmount, response.zakat.lessAmount)
+        assertEquals(1.0, response.zakat.excessAmount)
+        assertEquals(0.0, response.zakat.lessAmount)
     }
 
     @Test
@@ -180,10 +178,8 @@ class ZakatPayerServiceImplTest(
         assertEquals(request.totalPeople, response.zakat.totalPeople)
         assertEquals(request.totalAmount, response.zakat.totalAmount)
         assertEquals(request.excessAmountReturned, response.zakat.excessAmountReturned)
-
-        val expectedTotalAmount = zakat.amountPerPerson * response.zakat.totalPeople
-        assertEquals(request.totalAmount!! - expectedTotalAmount, response.zakat.excessAmount)
-        assertEquals(expectedTotalAmount - request.totalAmount!!, response.zakat.lessAmount)
+        assertEquals(0.5, response.zakat.excessAmount)
+        assertEquals(0.0, response.zakat.lessAmount)
     }
 
     @Test

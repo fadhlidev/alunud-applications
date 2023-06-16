@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
 import java.util.*
 
@@ -278,6 +279,57 @@ class ZakatPayerServiceImplTest(
             )
 
             zakatPayerService.update(zakat.year, UUID.randomUUID(), request)
+        }
+    }
+
+    @Test
+    fun `should delete zakat fitrah payer`() {
+        val payer = ZakatPayer(
+            id = UUID.randomUUID(),
+            name = "Fulan",
+            address = "Pojok 2/3",
+            totalPeople = 4,
+            totalAmount = 11.0,
+            excessAmountReturned = true,
+            excessAmount = 1.0,
+            lessAmount = 0.0,
+            submittedTime = System.currentTimeMillis(),
+            zakatEdition = zakat
+        )
+
+        zakatPayerRepository.save(payer)
+
+        zakatPayerService.delete(zakat.year, payer.id)
+
+        assertNull(zakatPayerRepository.findByIdOrNull(payer.id))
+    }
+
+    @Test
+    fun `should throw not found edition when delete zakat fitrah payer`() {
+        val payer = ZakatPayer(
+            id = UUID.randomUUID(),
+            name = "Fulan",
+            address = "Pojok 2/3",
+            totalPeople = 4,
+            totalAmount = 11.0,
+            excessAmountReturned = true,
+            excessAmount = 1.0,
+            lessAmount = 0.0,
+            submittedTime = System.currentTimeMillis(),
+            zakatEdition = zakat
+        )
+
+        zakatPayerRepository.save(payer)
+
+        assertThrows<NotFoundException> {
+            zakatPayerService.delete(2022, payer.id)
+        }
+    }
+
+    @Test
+    fun `should throw not found payer when delete zakat fitrah payer`() {
+        assertThrows<NotFoundException> {
+            zakatPayerService.delete(zakat.year, UUID.randomUUID())
         }
     }
 

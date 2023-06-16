@@ -83,4 +83,15 @@ class ZakatPayerServiceImpl(
         return payer.response()
     }
 
+    @Transactional
+    override fun delete(year: Int, id: UUID) {
+        val zakat = zakatEditionRepository.findByYear(year)
+            ?: throw NotFoundException("Zakat fitrah $year edition not found")
+
+        val payer = zakatPayerRepository.findByIdOrNull(id)
+            ?: throw NotFoundException("Zakat fitrah payer ($id) not found")
+
+        zakatPayerRepository.delete(payer)
+    }
+
 }

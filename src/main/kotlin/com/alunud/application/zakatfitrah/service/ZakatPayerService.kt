@@ -8,4 +8,5 @@ import java.util.UUID
 interface ZakatPayerService {
     fun create(year: Int, dto: CreateZakatPayerDto): ZakatPayerResponse
     fun update(year: Int, id: UUID, dto: UpdateZakatPayerDto): ZakatPayerResponse
+    fun delete(year: Int, id: UUID)
 }

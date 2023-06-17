@@ -4,7 +4,9 @@ import com.alunud.application.zakatfitrah.dto.CreateZakatEditionDto
 import com.alunud.application.zakatfitrah.dto.UpdateZakatEditionDto
 import com.alunud.application.zakatfitrah.entity.ZakatEdition
 import com.alunud.application.zakatfitrah.repository.ZakatEditionRepository
+import com.alunud.application.zakatfitrah.response.ZakatEditionDetailResponse
 import com.alunud.application.zakatfitrah.response.ZakatEditionResponse
+import com.alunud.application.zakatfitrah.response.detail
 import com.alunud.application.zakatfitrah.response.response
 import com.alunud.application.zakatfitrah.service.ZakatEditionService
 import com.alunud.exception.EntityExistsException
@@ -79,6 +81,14 @@ class ZakatEditionServiceImpl(
     @Transactional
     override fun findAll(): List<ZakatEditionResponse> {
         return zakatEditionRepository.findAll(Sort.by("year")).map { it.response() }
+    }
+
+    @Transactional
+    override fun findOne(year: Int): ZakatEditionDetailResponse {
+        val zakat = zakatEditionRepository.findByYear(year)
+            ?: throw NotFoundException("Zakat fitrah $year edition not found")
+
+        return zakat.detail()
     }
 
 }

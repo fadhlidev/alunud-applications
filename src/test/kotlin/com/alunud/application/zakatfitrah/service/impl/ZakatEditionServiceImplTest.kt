@@ -337,4 +337,35 @@ class ZakatEditionServiceImplTest(
         assertEquals(2023, result[2].year)
     }
 
+    @Test
+    fun `should find zakat fitrah edition`() {
+        val zakat = ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2023,
+            startDate = 1681578000000,
+            amountPerPerson = 2.5,
+            endDate = null
+        )
+
+        zakatEditionRepository.save(zakat)
+
+        assertNotNull(zakatEditionRepository.findByYear(zakat.year))
+
+        val result = zakatEditionService.findOne(zakat.year)
+
+        assertNotNull(result)
+
+        assertEquals(zakat.year, result.year)
+        assertEquals(zakat.startDate, result.startDate)
+        assertEquals(zakat.endDate, result.endDate)
+        assertEquals(zakat.amountPerPerson, result.amountPerPerson)
+    }
+
+    @Test
+    fun `should throw not found error when finding zakat fitrah edition`() {
+        assertThrows<NotFoundException> {
+            zakatEditionService.findOne(2023)
+        }
+    }
+
 }

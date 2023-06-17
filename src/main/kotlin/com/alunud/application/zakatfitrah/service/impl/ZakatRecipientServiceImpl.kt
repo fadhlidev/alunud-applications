@@ -14,6 +14,7 @@ import com.alunud.util.Validators
 import jakarta.transaction.Transactional
 import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -80,6 +81,14 @@ class ZakatRecipientServiceImpl(
             ?: throw NotFoundException("Zakat fitrah recipient ($id) not found")
 
         zakatRecipientRepository.delete(recipient)
+    }
+
+    @Transactional
+    override fun findAll(year: Int): List<ZakatRecipientResponse> {
+        val zakat = zakatEditionRepository.findByYear(year)
+            ?: throw NotFoundException("Zakat fitrah $year edition not found")
+
+        return zakatRecipientRepository.findAllByZakatEdition(zakat, Sort.by("givenTime")).map { it.response() }
     }
 
     private fun validateGivenTime(givenTime: Long?, edition: ZakatEdition) {

@@ -387,4 +387,51 @@ class ZakatRecipientServiceImplTest(
         }
     }
 
+    @Test
+    fun `should returns list of zakat fitrah recipients`() {
+        assertEquals(0, zakatRecipientService.findAll(zakat.year).size)
+
+        zakatRecipientRepository.save(ZakatRecipient(
+            id = UUID.randomUUID(),
+            name = "Fulan bin A",
+            address = "Pojok 2/3",
+            givenTime = 1681884000000,
+            givenAmount = 7.5,
+            zakatEdition = zakat
+        ))
+
+        assertEquals(1, zakatRecipientService.findAll(zakat.year).size)
+
+        zakatRecipientRepository.save(ZakatRecipient(
+            id = UUID.randomUUID(),
+            name = "Fulan bin B",
+            address = "Pojok 2/3",
+            givenTime = 1681894800000,
+            givenAmount = 5.0,
+            zakatEdition = zakat
+        ))
+
+        zakatRecipientRepository.save(ZakatRecipient(
+            id = UUID.randomUUID(),
+            name = "Fulan bin C",
+            address = "Pojok 2/3",
+            givenTime = 1681898400000,
+            givenAmount = 7.5,
+            zakatEdition = zakat
+        ))
+
+        val result =zakatRecipientService.findAll(zakat.year)
+        assertEquals(3, result.size)
+        assertEquals("Fulan bin A", result[0].name)
+        assertEquals("Fulan bin B", result[1].name)
+        assertEquals("Fulan bin C", result[2].name)
+    }
+
+    @Test
+    fun `should not returns list of zakat fitrah recipients because edition doesnt exist`() {
+        assertThrows<NotFoundException> {
+            zakatRecipientService.findAll(2022)
+        }
+    }
+
 }

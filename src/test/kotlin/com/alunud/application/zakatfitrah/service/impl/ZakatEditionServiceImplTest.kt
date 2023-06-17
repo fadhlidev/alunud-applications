@@ -219,6 +219,28 @@ class ZakatEditionServiceImplTest(
     }
 
     @Test
+    fun `should not update zakat fitrah edition's endDate because it is earlier than startDate`() {
+        val zakat = ZakatEdition(
+            id = UUID.randomUUID(),
+            year = 2023,
+            startDate = 1681578000000,
+            amountPerPerson = 2.5,
+            endDate = null
+        )
+
+        zakatEditionRepository.save(zakat)
+
+        assertThrows<ConstraintViolationException> {
+            val payload = UpdateZakatEditionDto(
+                startDate = null,
+                endDate = 1681491600000
+            )
+
+            zakatEditionService.update(zakat.year, payload)
+        }
+    }
+
+    @Test
     fun `should not update zakat fitrah edition because invalid payload`() {
         val zakat = ZakatEdition(
             id = UUID.randomUUID(),

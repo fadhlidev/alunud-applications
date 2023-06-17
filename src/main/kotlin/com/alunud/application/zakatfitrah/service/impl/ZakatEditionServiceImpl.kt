@@ -54,7 +54,14 @@ class ZakatEditionServiceImpl(
 
         zakat.apply {
             this.startDate = dto.startDate ?: this.startDate
-            this.endDate = dto.endDate ?: this.endDate
+
+            dto.endDate?.let {
+                validators.invalid("End date cannot be less than or equal to start date") {
+                    it <= this.startDate
+                }
+
+                this.endDate = it
+            }
         }
 
         zakatEditionRepository.save(zakat)

@@ -32,53 +32,53 @@ class ZakatEditionServiceImplTest(
 
     @Test
     fun `should create zakat fitrah edition`() {
-        val request = CreateZakatEditionDto(
+        val payload = CreateZakatEditionDto(
             year = 2023,
             startDate = 1681578000000,
             amountPerPerson = 2.5
         )
 
-        val response = zakatEditionService.create(request)
+        val result = zakatEditionService.create(payload)
 
-        assertNotNull(response)
+        assertNotNull(result)
 
-        assertEquals(request.year, response.year)
-        assertEquals(request.startDate, response.startDate)
-        assertEquals(request.amountPerPerson, response.amountPerPerson)
-        assertEquals(request.year, response.year)
-        assertNull(response.endDate)
+        assertEquals(payload.year, result.year)
+        assertEquals(payload.startDate, result.startDate)
+        assertEquals(payload.amountPerPerson, result.amountPerPerson)
+        assertEquals(payload.year, result.year)
+        assertNull(result.endDate)
     }
 
     @Test
     fun `should not create zakat fitrah edition because invalid payload`() {
         assertThrows<ConstraintViolationException> {
-            val request = CreateZakatEditionDto(
+            val payload = CreateZakatEditionDto(
                 year = 1945,
                 startDate = 1681578000000,
                 amountPerPerson = 2.5
             )
 
-            zakatEditionService.create(request)
+            zakatEditionService.create(payload)
         }
 
         assertThrows<ConstraintViolationException> {
-            val request = CreateZakatEditionDto(
+            val payload = CreateZakatEditionDto(
                 year = 2023,
                 startDate = -1,
                 amountPerPerson = 2.5
             )
 
-            zakatEditionService.create(request)
+            zakatEditionService.create(payload)
         }
 
         assertThrows<ConstraintViolationException> {
-            val request = CreateZakatEditionDto(
+            val payload = CreateZakatEditionDto(
                 year = 2023,
                 startDate = 1681578000000,
                 amountPerPerson = 2.0
             )
 
-            zakatEditionService.create(request)
+            zakatEditionService.create(payload)
         }
     }
 
@@ -95,13 +95,13 @@ class ZakatEditionServiceImplTest(
         zakatEditionRepository.save(zakat)
 
         assertThrows<EntityExistsException> {
-            val request = CreateZakatEditionDto(
+            val payload = CreateZakatEditionDto(
                 year = 2023,
                 startDate = 1681578000000,
                 amountPerPerson = 2.5
             )
 
-            zakatEditionService.create(request)
+            zakatEditionService.create(payload)
         }
     }
 
@@ -117,20 +117,20 @@ class ZakatEditionServiceImplTest(
 
         zakatEditionRepository.save(zakat)
 
-        val request = UpdateZakatEditionDto(
+        val payload = UpdateZakatEditionDto(
             startDate = 1681578000000,
             endDate = 1681923600000
         )
 
-        val response = zakatEditionService.update(zakat.year, request)
+        val result = zakatEditionService.update(zakat.year, payload)
 
-        assertNotNull(response)
+        assertNotNull(result)
 
-        assertEquals(zakat.year, response.year)
-        assertEquals(zakat.amountPerPerson, response.amountPerPerson)
-        assertEquals(zakat.startDate, response.startDate)
-        assertNotNull(response.endDate)
-        assertEquals(response.endDate, request.endDate)
+        assertEquals(zakat.year, result.year)
+        assertEquals(zakat.amountPerPerson, result.amountPerPerson)
+        assertEquals(zakat.startDate, result.startDate)
+        assertNotNull(result.endDate)
+        assertEquals(result.endDate, payload.endDate)
     }
 
     @Test
@@ -145,20 +145,20 @@ class ZakatEditionServiceImplTest(
 
         zakatEditionRepository.save(zakat)
 
-        val request = UpdateZakatEditionDto(
+        val payload = UpdateZakatEditionDto(
             startDate = 1681664400000,
             endDate = null
         )
 
-        val response = zakatEditionService.update(zakat.year, request)
+        val result = zakatEditionService.update(zakat.year, payload)
 
-        assertNotNull(response)
+        assertNotNull(result)
 
-        assertEquals(zakat.year, response.year)
-        assertEquals(zakat.amountPerPerson, response.amountPerPerson)
-        assertNotEquals(zakat.startDate, response.startDate)
-        assertNull(response.endDate)
-        assertTrue { zakat.startDate < response.startDate }
+        assertEquals(zakat.year, result.year)
+        assertEquals(zakat.amountPerPerson, result.amountPerPerson)
+        assertNotEquals(zakat.startDate, result.startDate)
+        assertNull(result.endDate)
+        assertTrue { zakat.startDate < result.startDate }
     }
 
     @Test
@@ -173,22 +173,22 @@ class ZakatEditionServiceImplTest(
 
         zakatEditionRepository.save(zakat)
 
-        val request = UpdateZakatEditionDto(
+        val payload = UpdateZakatEditionDto(
             startDate = null,
             endDate = 1681923600000
         )
 
-        val response = zakatEditionService.update(zakat.year, request)
+        val result = zakatEditionService.update(zakat.year, payload)
 
-        assertNotNull(response)
+        assertNotNull(result)
 
-        assertEquals(zakat.year, response.year)
-        assertEquals(zakat.amountPerPerson, response.amountPerPerson)
-        assertEquals(zakat.startDate, response.startDate)
+        assertEquals(zakat.year, result.year)
+        assertEquals(zakat.amountPerPerson, result.amountPerPerson)
+        assertEquals(zakat.startDate, result.startDate)
         assertNotNull(zakat.startDate)
-        assertNotNull(response.endDate)
-        assertEquals(response.endDate, request.endDate)
-        assertTrue { response.startDate < response.endDate!! }
+        assertNotNull(result.endDate)
+        assertEquals(result.endDate, payload.endDate)
+        assertTrue { result.startDate < result.endDate!! }
     }
 
     @Test
@@ -203,19 +203,19 @@ class ZakatEditionServiceImplTest(
 
         zakatEditionRepository.save(zakat)
 
-        val request = UpdateZakatEditionDto(
+        val payload = UpdateZakatEditionDto(
             startDate = null,
             endDate = null
         )
 
-        val response = zakatEditionService.update(zakat.year, request)
+        val result = zakatEditionService.update(zakat.year, payload)
 
-        assertNotNull(response)
+        assertNotNull(result)
 
-        assertEquals(zakat.year, response.year)
-        assertEquals(zakat.amountPerPerson, response.amountPerPerson)
-        assertEquals(zakat.startDate, response.startDate)
-        assertEquals(zakat.endDate, response.endDate)
+        assertEquals(zakat.year, result.year)
+        assertEquals(zakat.amountPerPerson, result.amountPerPerson)
+        assertEquals(zakat.startDate, result.startDate)
+        assertEquals(zakat.endDate, result.endDate)
     }
 
     @Test
@@ -231,24 +231,24 @@ class ZakatEditionServiceImplTest(
         zakatEditionRepository.save(zakat)
 
         assertThrows<ConstraintViolationException> {
-            val request = UpdateZakatEditionDto(
+            val payload = UpdateZakatEditionDto(
                 startDate = 1681578000000,
                 endDate = 1681491600000
             )
 
-            zakatEditionService.update(2023, request)
+            zakatEditionService.update(2023, payload)
         }
     }
 
     @Test
     fun `should throw error not found update zakat fitrah edition`() {
         assertThrows<NotFoundException> {
-            val request = UpdateZakatEditionDto(
+            val payload = UpdateZakatEditionDto(
                 startDate = null,
                 endDate = null
             )
 
-            zakatEditionService.update(2023, request)
+            zakatEditionService.update(2023, payload)
         }
     }
 

@@ -58,7 +58,7 @@ class ZakatPayerServiceImplTest(
 
     @Test
     fun `should create zakat fitrah payer`() {
-        val request = CreateZakatPayerDto(
+        val payload = CreateZakatPayerDto(
             name = "Fulan",
             address = "Pojok 2/3",
             totalPeople = 4,
@@ -66,17 +66,17 @@ class ZakatPayerServiceImplTest(
             excessAmountReturned = true
         )
 
-        val response = zakatPayerService.create(zakat.year, request)
+        val result = zakatPayerService.create(zakat.year, payload)
 
-        assertNotNull(response)
+        assertNotNull(result)
 
-        assertEquals(request.name, response.name)
-        assertEquals(request.address, response.address)
-        assertEquals(request.totalPeople, response.zakat.totalPeople)
-        assertEquals(request.totalAmount, response.zakat.totalAmount)
-        assertEquals(request.excessAmountReturned, response.zakat.excessAmountReturned)
-        assertEquals(1.0, response.zakat.excessAmount)
-        assertEquals(0.0, response.zakat.lessAmount)
+        assertEquals(payload.name, result.name)
+        assertEquals(payload.address, result.address)
+        assertEquals(payload.totalPeople, result.zakat.totalPeople)
+        assertEquals(payload.totalAmount, result.zakat.totalAmount)
+        assertEquals(payload.excessAmountReturned, result.zakat.excessAmountReturned)
+        assertEquals(1.0, result.zakat.excessAmount)
+        assertEquals(0.0, result.zakat.lessAmount)
     }
 
     @Test
@@ -92,7 +92,7 @@ class ZakatPayerServiceImplTest(
         zakatEditionRepository.save(zakat)
 
         assertThrows<ConstraintViolationException> {
-            val request = CreateZakatPayerDto(
+            val payload = CreateZakatPayerDto(
                 name = "Fulan",
                 address = "Pojok 2/3",
                 totalPeople = 4,
@@ -100,14 +100,14 @@ class ZakatPayerServiceImplTest(
                 excessAmountReturned = true
             )
 
-            zakatPayerService.create(zakat.year, request)
+            zakatPayerService.create(zakat.year, payload)
         }
     }
 
     @Test
     fun `should not create zakat fitrah payer because invalid payload`() {
         assertThrows<ConstraintViolationException> {
-            val request = CreateZakatPayerDto(
+            val payload = CreateZakatPayerDto(
                 name = "",
                 address = null,
                 totalPeople = 4,
@@ -115,11 +115,11 @@ class ZakatPayerServiceImplTest(
                 excessAmountReturned = true
             )
 
-            zakatPayerService.create(zakat.year, request)
+            zakatPayerService.create(zakat.year, payload)
         }
 
         assertThrows<ConstraintViolationException> {
-            val request = CreateZakatPayerDto(
+            val payload = CreateZakatPayerDto(
                 name = "Fulan",
                 address = "",
                 totalPeople = 4,
@@ -127,11 +127,11 @@ class ZakatPayerServiceImplTest(
                 excessAmountReturned = true
             )
 
-            zakatPayerService.create(zakat.year, request)
+            zakatPayerService.create(zakat.year, payload)
         }
 
         assertThrows<ConstraintViolationException> {
-            val request = CreateZakatPayerDto(
+            val payload = CreateZakatPayerDto(
                 name = "Fulan",
                 address = null,
                 totalPeople = 0,
@@ -139,11 +139,11 @@ class ZakatPayerServiceImplTest(
                 excessAmountReturned = true
             )
 
-            zakatPayerService.create(zakat.year, request)
+            zakatPayerService.create(zakat.year, payload)
         }
 
         assertThrows<ConstraintViolationException> {
-            val request = CreateZakatPayerDto(
+            val payload = CreateZakatPayerDto(
                 name = "Fulan",
                 address = null,
                 totalPeople = 4,
@@ -151,14 +151,14 @@ class ZakatPayerServiceImplTest(
                 excessAmountReturned = true
             )
 
-            zakatPayerService.create(zakat.year, request)
+            zakatPayerService.create(zakat.year, payload)
         }
     }
 
     @Test
     fun `should not create zakat fitrah payer because edition doesnt exists`() {
         assertThrows<NotFoundException> {
-            val request = CreateZakatPayerDto(
+            val payload = CreateZakatPayerDto(
                 name = "Fulan",
                 address = "Pojok 2/3",
                 totalPeople = 4,
@@ -166,7 +166,7 @@ class ZakatPayerServiceImplTest(
                 excessAmountReturned = true
             )
 
-            zakatPayerService.create(2022, request)
+            zakatPayerService.create(2022, payload)
         }
     }
 
@@ -187,7 +187,7 @@ class ZakatPayerServiceImplTest(
 
         zakatPayerRepository.save(payer)
 
-        val request = UpdateZakatPayerDto(
+        val payload = UpdateZakatPayerDto(
             name = "Fulanah",
             address = "Pojok 2/3",
             totalPeople = 5,
@@ -195,16 +195,16 @@ class ZakatPayerServiceImplTest(
             excessAmountReturned = false
         )
 
-        val response = zakatPayerService.update(zakat.year, payer.id, request)
+        val result = zakatPayerService.update(zakat.year, payer.id, payload)
 
-        assertNotNull(response)
+        assertNotNull(result)
 
-        assertEquals(request.name, response.name)
-        assertEquals(request.totalPeople, response.zakat.totalPeople)
-        assertEquals(request.totalAmount, response.zakat.totalAmount)
-        assertEquals(request.excessAmountReturned, response.zakat.excessAmountReturned)
-        assertEquals(0.5, response.zakat.excessAmount)
-        assertEquals(0.0, response.zakat.lessAmount)
+        assertEquals(payload.name, result.name)
+        assertEquals(payload.totalPeople, result.zakat.totalPeople)
+        assertEquals(payload.totalAmount, result.zakat.totalAmount)
+        assertEquals(payload.excessAmountReturned, result.zakat.excessAmountReturned)
+        assertEquals(0.5, result.zakat.excessAmount)
+        assertEquals(0.0, result.zakat.lessAmount)
     }
 
     @Test
@@ -225,7 +225,7 @@ class ZakatPayerServiceImplTest(
         zakatPayerRepository.save(payer)
 
         assertThrows<ConstraintViolationException> {
-            val request = UpdateZakatPayerDto(
+            val payload = UpdateZakatPayerDto(
                 name = "",
                 address = "Pojok 2/3",
                 totalPeople = 5,
@@ -233,11 +233,11 @@ class ZakatPayerServiceImplTest(
                 excessAmountReturned = false
             )
 
-            zakatPayerService.update(zakat.year, payer.id, request)
+            zakatPayerService.update(zakat.year, payer.id, payload)
         }
 
         assertThrows<ConstraintViolationException> {
-            val request = UpdateZakatPayerDto(
+            val payload = UpdateZakatPayerDto(
                 name = "Fulanah",
                 address = "",
                 totalPeople = 5,
@@ -245,11 +245,11 @@ class ZakatPayerServiceImplTest(
                 excessAmountReturned = false
             )
 
-            zakatPayerService.update(zakat.year, payer.id, request)
+            zakatPayerService.update(zakat.year, payer.id, payload)
         }
 
         assertThrows<ConstraintViolationException> {
-            val request = UpdateZakatPayerDto(
+            val payload = UpdateZakatPayerDto(
                 name = "Fulanah",
                 address = "Pojok 2/3",
                 totalPeople = 0,
@@ -257,11 +257,11 @@ class ZakatPayerServiceImplTest(
                 excessAmountReturned = false
             )
 
-            zakatPayerService.update(zakat.year, payer.id, request)
+            zakatPayerService.update(zakat.year, payer.id, payload)
         }
 
         assertThrows<ConstraintViolationException> {
-            val request = UpdateZakatPayerDto(
+            val payload = UpdateZakatPayerDto(
                 name = "Fulanah",
                 address = "Pojok 2/3",
                 totalPeople = 5,
@@ -269,14 +269,14 @@ class ZakatPayerServiceImplTest(
                 excessAmountReturned = false
             )
 
-            zakatPayerService.update(zakat.year, payer.id, request)
+            zakatPayerService.update(zakat.year, payer.id, payload)
         }
     }
 
     @Test
     fun `should not update zakat fitrah payer because edition doesnt exists`() {
         assertThrows<NotFoundException> {
-            val request = UpdateZakatPayerDto(
+            val payload = UpdateZakatPayerDto(
                 name = "Fulanah",
                 address = "Pojok 2/3",
                 totalPeople = 5,
@@ -284,14 +284,14 @@ class ZakatPayerServiceImplTest(
                 excessAmountReturned = false
             )
 
-            zakatPayerService.update(2023, UUID.randomUUID(), request)
+            zakatPayerService.update(2023, UUID.randomUUID(), payload)
         }
     }
 
     @Test
     fun `should not update zakat fitrah payer because payer doesnt exists`() {
         assertThrows<NotFoundException> {
-            val request = UpdateZakatPayerDto(
+            val payload = UpdateZakatPayerDto(
                 name = "Fulanah",
                 address = "Pojok 2/3",
                 totalPeople = 5,
@@ -299,7 +299,7 @@ class ZakatPayerServiceImplTest(
                 excessAmountReturned = false
             )
 
-            zakatPayerService.update(zakat.year, UUID.randomUUID(), request)
+            zakatPayerService.update(zakat.year, UUID.randomUUID(), payload)
         }
     }
 

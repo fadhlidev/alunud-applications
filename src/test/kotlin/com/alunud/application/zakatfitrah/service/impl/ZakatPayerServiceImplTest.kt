@@ -440,6 +440,8 @@ class ZakatPayerServiceImplTest(
 
         zakatPayerRepository.save(payer)
 
+        assertNotNull(zakatPayerRepository.findByZakatEditionAndId(zakat, payer.id))
+
         val response = zakatPayerService.findOne(zakat.year, payer.id)
 
         assertNotNull(response)
@@ -469,6 +471,8 @@ class ZakatPayerServiceImplTest(
         )
 
         zakatPayerRepository.save(payer)
+
+        zakatPayerRepository.findByZakatEditionAndId(zakat, payer.id)
 
         assertThrows<NotFoundException> {
             zakatPayerService.findOne(2022, payer.id)

@@ -9,18 +9,18 @@ import java.util.*
 data class ZakatApplicant(
     @field:Id
     val id: UUID,
-    val institutionName: String,
+    var institutionName: String,
 
     @field:Column(nullable = true)
-    val institutionAddress: String?,
+    var institutionAddress: String?,
 
-    val receivedTime: Long,
-
-    @field:Column(nullable = true)
-    val givenTime: Long?,
+    var receivedTime: Long,
 
     @field:Column(nullable = true)
-    val givenAmount: Double?,
+    var givenTime: Long?,
+
+    @field:Column(nullable = true)
+    var givenAmount: Double?,
 
     @field:ManyToOne(fetch = LAZY)
     @field:JoinColumn(name = "zakat_id")

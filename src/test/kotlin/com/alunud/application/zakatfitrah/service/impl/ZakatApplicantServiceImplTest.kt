@@ -408,4 +408,55 @@ class ZakatApplicantServiceImplTest(
         }
     }
 
+    @Test
+    fun `should returns list of zakat fitrah applicants`() {
+        assertEquals(0, zakatApplicantService.findAll(zakat.year).size)
+
+        zakatApplicantRepository.save(ZakatApplicant(
+            id = UUID.randomUUID(),
+            institutionName = "Pondok Pesantren A",
+            institutionAddress = "Tawangsari",
+            receivedTime = 1681801200000,
+            givenTime = null,
+            givenAmount = null,
+            zakatEdition = zakat
+        ))
+
+        assertEquals(1, zakatApplicantService.findAll(zakat.year).size)
+
+        zakatApplicantRepository.save(ZakatApplicant(
+            id = UUID.randomUUID(),
+            institutionName = "Pondok Pesantren B",
+            institutionAddress = "Tawangsari",
+            receivedTime = 1681804800000,
+            givenTime = null,
+            givenAmount = null,
+            zakatEdition = zakat
+        ))
+
+        zakatApplicantRepository.save(ZakatApplicant(
+            id = UUID.randomUUID(),
+            institutionName = "Pondok Pesantren C",
+            institutionAddress = "Tawangsari",
+            receivedTime = 1681808400000,
+            givenTime = null,
+            givenAmount = null,
+            zakatEdition = zakat
+        ))
+
+
+        val result = zakatApplicantService.findAll(zakat.year)
+        assertEquals(3, result.size)
+        assertEquals("Pondok Pesantren A", result[0].institutionName)
+        assertEquals("Pondok Pesantren B", result[1].institutionName)
+        assertEquals("Pondok Pesantren C", result[2].institutionName)
+    }
+
+    @Test
+    fun `should not returns list of zakat fitrah applicants because edition doesnt exist`() {
+        assertThrows<NotFoundException> {
+            zakatApplicantService.findAll(2022)
+        }
+    }
+
 }

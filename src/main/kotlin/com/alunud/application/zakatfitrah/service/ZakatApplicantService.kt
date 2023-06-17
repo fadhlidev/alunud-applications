@@ -9,4 +9,5 @@ interface ZakatApplicantService {
     fun create(year: Int, dto: CreateZakatApplicantDto): ZakatApplicantResponse
     fun update(year: Int, id: UUID, dto: UpdateZakatApplicantDto): ZakatApplicantResponse
     fun delete(year: Int, id: UUID)
+    fun findAll(year: Int): List<ZakatApplicantResponse>
 }

@@ -280,6 +280,8 @@ class ZakatEditionServiceImplTest(
 
     @Test
     fun `should returns list of zakat fitrah edition`() {
+        assertEquals(0, zakatEditionService.findAll().size)
+
         zakatEditionRepository.save(ZakatEdition(
             id = UUID.randomUUID(),
             year = 2021,

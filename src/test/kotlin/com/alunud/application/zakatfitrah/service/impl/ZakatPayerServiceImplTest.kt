@@ -360,6 +360,8 @@ class ZakatPayerServiceImplTest(
 
     @Test
     fun `should returns list of zakat fitrah payers`() {
+        assertEquals(0, zakatPayerService.findAll(zakat.year).size)
+
         zakatPayerRepository.save(
             ZakatPayer(
                 id = UUID.randomUUID(),
@@ -412,6 +414,13 @@ class ZakatPayerServiceImplTest(
         assertEquals("Wahid", result[0].name)
         assertEquals("Isnaini", result[1].name)
         assertEquals("Salasa", result[2].name)
+    }
+
+    @Test
+    fun `should not returns list of zakat fitrah payers because edition doesnt exist`() {
+        assertThrows<NotFoundException> {
+            zakatPayerService.findAll(2022)
+        }
     }
 
     @Test

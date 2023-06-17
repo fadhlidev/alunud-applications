@@ -2,6 +2,8 @@ package com.alunud.application.zakatfitrah.service.impl
 
 import com.alunud.application.AlUnudApplication
 import com.alunud.application.zakatfitrah.dto.CreateZakatApplicantDto
+import com.alunud.application.zakatfitrah.dto.UpdateZakatApplicantDto
+import com.alunud.application.zakatfitrah.entity.ZakatApplicant
 import com.alunud.application.zakatfitrah.entity.ZakatEdition
 import com.alunud.application.zakatfitrah.repository.ZakatApplicantRepository
 import com.alunud.application.zakatfitrah.repository.ZakatEditionRepository
@@ -176,6 +178,183 @@ class ZakatApplicantServiceImplTest(
             )
 
             zakatApplicantService.create(2022, request)
+        }
+    }
+
+    @Test
+    fun `should update zakat fitrah applicant`() {
+        val applicant = ZakatApplicant(
+            id = UUID.randomUUID(),
+            institutionName = "Pondok Pesantren A",
+            institutionAddress = "Tawangsari",
+            receivedTime = 1681801200000,
+            givenTime = null,
+            givenAmount = null,
+            zakatEdition = zakat
+        )
+
+        zakatApplicantRepository.save(applicant)
+
+        val request = UpdateZakatApplicantDto(
+            institutionName = "Pondok Pesantren B",
+            institutionAddress = "Sukoharjo",
+            receivedTime = 1681804800000,
+            givenTime = 1681808400000,
+            givenAmount = 25.0
+        )
+
+        val response = zakatApplicantService.update(zakat.year, applicant.id, request)
+
+        assertNotNull(response)
+
+        assertEquals(request.institutionName, response.institutionName)
+        assertEquals(request.institutionAddress, response.institutionAddress)
+        assertEquals(request.receivedTime, response.receivedTime)
+        assertEquals(request.givenTime, response.givenTime)
+        assertEquals(request.givenAmount, response.givenAmount)
+    }
+
+    @Test
+    fun `should not update zakat fitrah applicant because receivedTime is earlier that startDate edition`() {
+        val applicant = ZakatApplicant(
+            id = UUID.randomUUID(),
+            institutionName = "Pondok Pesantren A",
+            institutionAddress = "Tawangsari",
+            receivedTime = 1681801200000,
+            givenTime = null,
+            givenAmount = null,
+            zakatEdition = zakat
+        )
+
+        zakatApplicantRepository.save(applicant)
+
+        assertThrows<ConstraintViolationException> {
+            val request = UpdateZakatApplicantDto(
+                institutionName = "Pondok Pesantren B",
+                institutionAddress = "Sukoharjo",
+                receivedTime = 1681542000000,
+                givenTime = null,
+                givenAmount = null
+            )
+
+            zakatApplicantService.update(zakat.year, applicant.id, request)
+        }
+    }
+
+    @Test
+    fun `should not update zakat fitrah applicant because invalid payload`() {
+        val applicant = ZakatApplicant(
+            id = UUID.randomUUID(),
+            institutionName = "Pondok Pesantren A",
+            institutionAddress = "Tawangsari",
+            receivedTime = 1681801200000,
+            givenTime = null,
+            givenAmount = null,
+            zakatEdition = zakat
+        )
+
+        zakatApplicantRepository.save(applicant)
+
+        assertThrows<ConstraintViolationException> {
+            val request = UpdateZakatApplicantDto(
+                institutionName = "",
+                institutionAddress = "Sukoharjo",
+                receivedTime = 1681804800000,
+                givenTime = 1681808400000,
+                givenAmount = 25.0
+            )
+
+            zakatApplicantService.update(zakat.year, applicant.id, request)
+        }
+
+        assertThrows<ConstraintViolationException> {
+            val request = UpdateZakatApplicantDto(
+                institutionName = "Pondok Pesantren B",
+                institutionAddress = "",
+                receivedTime = 1681804800000,
+                givenTime = 1681808400000,
+                givenAmount = 25.0
+            )
+
+            zakatApplicantService.update(zakat.year, applicant.id, request)
+        }
+
+        assertThrows<ConstraintViolationException> {
+            val request = UpdateZakatApplicantDto(
+                institutionName = "Pondok Pesantren B",
+                institutionAddress = "Sukoharjo",
+                receivedTime = -1,
+                givenTime = null,
+                givenAmount = null
+            )
+
+            zakatApplicantService.update(zakat.year, applicant.id, request)
+        }
+
+        assertThrows<ConstraintViolationException> {
+            val request = UpdateZakatApplicantDto(
+                institutionName = "Pondok Pesantren B",
+                institutionAddress = "Sukoharjo",
+                receivedTime = 1681808400000,
+                givenTime = 1681804800000,
+                givenAmount = 25.0
+            )
+
+            zakatApplicantService.update(zakat.year, applicant.id, request)
+        }
+
+        assertThrows<ConstraintViolationException> {
+            val request = UpdateZakatApplicantDto(
+                institutionName = "Pondok Pesantren B",
+                institutionAddress = "Sukoharjo",
+                receivedTime = 1681804800000,
+                givenTime = 1681808400000,
+                givenAmount = 0.0
+            )
+
+            zakatApplicantService.update(zakat.year, applicant.id, request)
+        }
+    }
+
+    @Test
+    fun `should not update zakat fitrah applicant because edition doesnt exists`() {
+        val applicant = ZakatApplicant(
+            id = UUID.randomUUID(),
+            institutionName = "Pondok Pesantren A",
+            institutionAddress = "Tawangsari",
+            receivedTime = 1681801200000,
+            givenTime = null,
+            givenAmount = null,
+            zakatEdition = zakat
+        )
+
+        zakatApplicantRepository.save(applicant)
+
+        assertThrows<NotFoundException> {
+            val request = UpdateZakatApplicantDto(
+            institutionName = "Pondok Pesantren B",
+            institutionAddress = "Sukoharjo",
+            receivedTime = 1681804800000,
+            givenTime = 1681808400000,
+            givenAmount = 25.0
+        )
+
+            zakatApplicantService.update(2022, applicant.id, request)
+        }
+    }
+
+    @Test
+    fun `should not update zakat fitrah applicant because applicant doesnt exists`() {
+        assertThrows<NotFoundException> {
+            val request = UpdateZakatApplicantDto(
+                institutionName = "Pondok Pesantren B",
+                institutionAddress = "Sukoharjo",
+                receivedTime = 1681804800000,
+                givenTime = 1681808400000,
+                givenAmount = 25.0
+            )
+
+            zakatApplicantService.update(zakat.year, UUID.randomUUID(), request)
         }
     }
 

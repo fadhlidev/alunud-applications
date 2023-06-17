@@ -1,6 +1,7 @@
 package com.alunud.application.zakatfitrah.service.impl
 
 import com.alunud.application.zakatfitrah.dto.CreateZakatApplicantDto
+import com.alunud.application.zakatfitrah.dto.UpdateZakatApplicantDto
 import com.alunud.application.zakatfitrah.entity.ZakatApplicant
 import com.alunud.application.zakatfitrah.repository.ZakatApplicantRepository
 import com.alunud.application.zakatfitrah.repository.ZakatEditionRepository
@@ -44,6 +45,34 @@ class ZakatApplicantServiceImpl(
             givenAmount = dto.givenAmount,
             zakatEdition = zakat
         )
+
+        zakatApplicantRepository.save(applicant)
+        return applicant.response()
+    }
+
+    @Transactional
+    override fun update(year: Int, id: UUID, dto: UpdateZakatApplicantDto): ZakatApplicantResponse {
+        validators.validate(dto)
+
+        val zakat = zakatEditionRepository.findByYear(year)
+            ?: throw NotFoundException("Zakat fitrah $year edition not found")
+
+        val applicant = zakatApplicantRepository.findByZakatEditionAndId(zakat, id)
+            ?: throw NotFoundException("Zakat fitrah applicant ($id) not found")
+
+        dto.receivedTime?.let {
+            validators.invalid("Received time cannot be earlier than the start date edition") {
+                it < zakat.startDate
+            }
+        }
+
+        applicant.apply {
+            this.institutionName = dto.institutionName ?: this.institutionName
+            this.institutionAddress = dto.institutionAddress ?: this.institutionAddress
+            this.receivedTime = dto.receivedTime ?: this.receivedTime
+            this.givenTime = dto.givenTime ?: this.givenTime
+            this.givenAmount = dto.givenAmount ?: this.givenAmount
+        }
 
         zakatApplicantRepository.save(applicant)
         return applicant.response()

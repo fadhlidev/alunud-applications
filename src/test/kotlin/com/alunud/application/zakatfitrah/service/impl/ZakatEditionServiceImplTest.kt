@@ -264,6 +264,8 @@ class ZakatEditionServiceImplTest(
 
         zakatEditionRepository.save(zakat)
 
+        assertNotNull(zakatEditionRepository.findByYear(zakat.year))
+
         zakatEditionService.delete(zakat.year)
 
         assertNull(zakatEditionRepository.findByYear(zakat.year))

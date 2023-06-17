@@ -320,6 +320,8 @@ class ZakatPayerServiceImplTest(
 
         zakatPayerRepository.save(payer)
 
+        assertNotNull(zakatPayerRepository.findByIdOrNull(payer.id))
+
         zakatPayerService.delete(zakat.year, payer.id)
 
         assertNull(zakatPayerRepository.findByIdOrNull(payer.id))
@@ -341,6 +343,8 @@ class ZakatPayerServiceImplTest(
         )
 
         zakatPayerRepository.save(payer)
+
+        assertNotNull(zakatPayerRepository.findByIdOrNull(payer.id))
 
         assertThrows<NotFoundException> {
             zakatPayerService.delete(2022, payer.id)

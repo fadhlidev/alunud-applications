@@ -10,4 +10,5 @@ interface ZakatRecipientService {
     fun update(year: Int, id: UUID, dto: UpdateZakatRecipientDto): ZakatRecipientResponse
     fun delete(year: Int, id: UUID)
     fun findAll(year: Int): List<ZakatRecipientResponse>
+    fun findOne(year: Int, id: UUID): ZakatRecipientResponse
 }

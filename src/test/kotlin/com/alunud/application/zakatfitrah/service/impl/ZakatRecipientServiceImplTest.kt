@@ -434,4 +434,56 @@ class ZakatRecipientServiceImplTest(
         }
     }
 
+    @Test
+    fun `should find zakat fitrah recipient`() {
+        val recipient = ZakatRecipient(
+            id = UUID.randomUUID(),
+            name = "Fulan",
+            address = "Pojok 2/3",
+            givenTime = 1681884000000,
+            givenAmount = 5.0,
+            zakatEdition = zakat
+        )
+
+        zakatRecipientRepository.save(recipient)
+
+        assertNotNull(zakatRecipientRepository.findByZakatEditionAndId(zakat, recipient.id))
+
+        val result = zakatRecipientService.findOne(zakat.year, recipient.id)
+
+        assertNotNull(result)
+
+        assertEquals(recipient.name, result.name)
+        assertEquals(recipient.address, result.address)
+        assertEquals(recipient.givenTime, result.givenTime)
+        assertEquals(recipient.givenAmount, result.givenAmount)
+    }
+
+    @Test
+    fun `should throw not found edition when finding zakat fitrah recipient`() {
+        val recipient = ZakatRecipient(
+            id = UUID.randomUUID(),
+            name = "Fulan",
+            address = "Pojok 2/3",
+            givenTime = 1681884000000,
+            givenAmount = 5.0,
+            zakatEdition = zakat
+        )
+
+        zakatRecipientRepository.save(recipient)
+
+        assertNotNull(zakatRecipientRepository.findByZakatEditionAndId(zakat, recipient.id))
+
+        assertThrows<NotFoundException> {
+            zakatRecipientService.findOne(2022, recipient.id)
+        }
+    }
+
+    @Test
+    fun `should throw not found recipient when finding zakat fitrah recipient`() {
+        assertThrows<NotFoundException> {
+            zakatRecipientService.findOne(2022, UUID.randomUUID())
+        }
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.alunud.application.zakatfitrah.service.impl
 
 import com.alunud.application.zakatfitrah.dto.CreateZakatRecipientDto
+import com.alunud.application.zakatfitrah.dto.UpdateZakatRecipientDto
+import com.alunud.application.zakatfitrah.entity.ZakatEdition
 import com.alunud.application.zakatfitrah.entity.ZakatRecipient
 import com.alunud.application.zakatfitrah.repository.ZakatEditionRepository
 import com.alunud.application.zakatfitrah.repository.ZakatRecipientRepository
@@ -31,19 +33,7 @@ class ZakatRecipientServiceImpl(
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
 
-        dto.givenTime?.let {
-            validators.invalid("Given time cannot be earlier than the start date edition") {
-                it < zakat.startDate
-            }
-        }
-
-        zakat.endDate?.let {  endDate ->
-            dto.givenTime?.let { givenTime ->
-                validators.invalid("Given time cannot be later than the end date edition") {
-                    givenTime > endDate
-                }
-            }
-        }
+        validateGivenTime(dto.givenTime, zakat)
 
         val recipient = ZakatRecipient(
             id = UUID.randomUUID(),
@@ -56,6 +46,45 @@ class ZakatRecipientServiceImpl(
 
         zakatRecipientRepository.save(recipient)
         return recipient.response()
+    }
+
+    @Transactional
+    override fun update(year: Int, id: UUID, dto: UpdateZakatRecipientDto): ZakatRecipientResponse {
+        validators.validate(dto)
+
+        val zakat = zakatEditionRepository.findByYear(year)
+            ?: throw NotFoundException("Zakat fitrah $year edition not found")
+
+        val recipient = zakatRecipientRepository.findByZakatEditionAndId(zakat, id)
+            ?: throw NotFoundException("Zakat fitrah recipient ($id) not found")
+
+        validateGivenTime(dto.givenTime, zakat)
+
+        recipient.apply {
+            this.name = dto.name ?: this.name
+            this.address = dto.address ?: this.address
+            this.givenTime = dto.givenTime ?: this.givenTime
+            this.givenAmount = dto.givenAmount ?: this.givenAmount
+        }
+
+        zakatRecipientRepository.save(recipient)
+        return recipient.response()
+    }
+
+    private fun validateGivenTime(givenTime: Long?, edition: ZakatEdition) {
+        givenTime?.let {
+            validators.invalid("Given time cannot be earlier than the start date edition") {
+                it < edition.startDate
+            }
+        }
+
+        edition.endDate?.let {  endDate ->
+            givenTime?.let { givenTime ->
+                validators.invalid("Given time cannot be later than the end date edition") {
+                    givenTime > endDate
+                }
+            }
+        }
     }
 
 }

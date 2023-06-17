@@ -23,8 +23,8 @@ CREATE TABLE zakat_fitrah_recipients
     id           VARCHAR(50) PRIMARY KEY,
     name         VARCHAR(255) NOT NULL,
     address      VARCHAR(500),
-    given_time   INT          NOT NULL,
-    given_amount INT          NOT NULL,
+    given_time   INT,
+    given_amount INT,
     zakat_id     VARCHAR(50) REFERENCES zakat_fitrah_editions (id)
 );
 

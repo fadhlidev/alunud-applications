@@ -16,7 +16,9 @@ data class ZakatRecipient(
 
     @field:Column(nullable = true)
     val givenTime: Long?,
-    val givenAmount: Double,
+
+    @field:Column(nullable = true)
+    val givenAmount: Double?,
 
     @field:ManyToOne(fetch = LAZY)
     @field:JoinColumn(name = "zakat_id")

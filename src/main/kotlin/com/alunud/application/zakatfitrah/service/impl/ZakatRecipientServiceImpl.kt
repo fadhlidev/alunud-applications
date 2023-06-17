@@ -71,6 +71,17 @@ class ZakatRecipientServiceImpl(
         return recipient.response()
     }
 
+    @Transactional
+    override fun delete(year: Int, id: UUID) {
+        val zakat = zakatEditionRepository.findByYear(year)
+            ?: throw NotFoundException("Zakat fitrah $year edition not found")
+
+        val recipient = zakatRecipientRepository.findByZakatEditionAndId(zakat, id)
+            ?: throw NotFoundException("Zakat fitrah recipient ($id) not found")
+
+        zakatRecipientRepository.delete(recipient)
+    }
+
     private fun validateGivenTime(givenTime: Long?, edition: ZakatEdition) {
         givenTime?.let {
             validators.invalid("Given time cannot be earlier than the start date edition") {

@@ -459,4 +459,59 @@ class ZakatApplicantServiceImplTest(
         }
     }
 
+    @Test
+    fun `should find zakat fitrah applicant`() {
+        val applicant = ZakatApplicant(
+            id = UUID.randomUUID(),
+            institutionName = "Pondok Pesantren A",
+            institutionAddress = "Tawangsari",
+            receivedTime = 1681801200000,
+            givenTime = null,
+            givenAmount = null,
+            zakatEdition = zakat
+        )
+
+        zakatApplicantRepository.save(applicant)
+
+        assertNotNull(zakatApplicantRepository.findByZakatEditionAndId(zakat, applicant.id))
+
+        val response = zakatApplicantService.findOne(zakat.year, applicant.id)
+
+        assertNotNull(response)
+
+        assertEquals(applicant.institutionName, response.institutionName)
+        assertEquals(applicant.institutionAddress, response.institutionAddress)
+        assertEquals(applicant.receivedTime, response.receivedTime)
+        assertEquals(applicant.givenTime, response.givenTime)
+        assertEquals(applicant.givenAmount, response.givenAmount)
+    }
+
+    @Test
+    fun `should throw not found edition when finding zakat fitrah applicant`() {
+        val applicant = ZakatApplicant(
+            id = UUID.randomUUID(),
+            institutionName = "Pondok Pesantren A",
+            institutionAddress = "Tawangsari",
+            receivedTime = 1681801200000,
+            givenTime = null,
+            givenAmount = null,
+            zakatEdition = zakat
+        )
+
+        zakatApplicantRepository.save(applicant)
+
+        assertNotNull(zakatApplicantRepository.findByZakatEditionAndId(zakat, applicant.id))
+
+        assertThrows<NotFoundException> {
+            zakatApplicantService.findOne(2022, applicant.id)
+        }
+    }
+
+    @Test
+    fun `should throw not found applicant when finding zakat fitrah applicant`() {
+        assertThrows<NotFoundException> {
+            zakatApplicantService.findOne(zakat.year, UUID.randomUUID())
+        }
+    }
+
 }

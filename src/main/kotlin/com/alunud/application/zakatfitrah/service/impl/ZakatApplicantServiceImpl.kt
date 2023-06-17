@@ -98,4 +98,15 @@ class ZakatApplicantServiceImpl(
         return zakatApplicantRepository.findAllByZakatEdition(zakat, Sort.by("receivedTime")).map { it.response() }
     }
 
+    @Transactional
+    override fun findOne(year: Int, id: UUID): ZakatApplicantResponse {
+        val zakat = zakatEditionRepository.findByYear(year)
+            ?: throw NotFoundException("Zakat fitrah $year edition not found")
+
+        val applicant = zakatApplicantRepository.findByZakatEditionAndId(zakat, id)
+            ?: throw NotFoundException("Zakat fitrah applicant ($id) not found")
+
+        return applicant.response()
+    }
+
 }

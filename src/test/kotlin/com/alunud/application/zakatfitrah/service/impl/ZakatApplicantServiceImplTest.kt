@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
 import java.util.*
 
@@ -355,6 +356,55 @@ class ZakatApplicantServiceImplTest(
             )
 
             zakatApplicantService.update(zakat.year, UUID.randomUUID(), request)
+        }
+    }
+
+    @Test
+    fun `should delete zakat fitrah applicant`() {
+        val applicant = ZakatApplicant(
+            id = UUID.randomUUID(),
+            institutionName = "Pondok Pesantren A",
+            institutionAddress = "Tawangsari",
+            receivedTime = 1681801200000,
+            givenTime = null,
+            givenAmount = null,
+            zakatEdition = zakat
+        )
+
+        zakatApplicantRepository.save(applicant)
+
+        assertNotNull(zakatApplicantRepository.findByIdOrNull(applicant.id))
+
+        zakatApplicantService.delete(zakat.year, applicant.id)
+
+        assertNull(zakatApplicantRepository.findByIdOrNull(applicant.id))
+    }
+
+    @Test
+    fun `should throw not found edition when delete zakat fitrah applicant`() {
+        val applicant = ZakatApplicant(
+            id = UUID.randomUUID(),
+            institutionName = "Pondok Pesantren A",
+            institutionAddress = "Tawangsari",
+            receivedTime = 1681801200000,
+            givenTime = null,
+            givenAmount = null,
+            zakatEdition = zakat
+        )
+
+        zakatApplicantRepository.save(applicant)
+
+        assertNotNull(zakatApplicantRepository.findByIdOrNull(applicant.id))
+
+        assertThrows<NotFoundException> {
+            zakatApplicantService.delete(2022, applicant.id)
+        }
+    }
+
+    @Test
+    fun `should throw not found applicant when delete zakat fitrah applicant`() {
+        assertThrows<NotFoundException> {
+            zakatApplicantService.delete(zakat.year, UUID.randomUUID())
         }
     }
 

@@ -44,7 +44,14 @@ fun ZakatEdition.detail(): ZakatEditionDetailResponse {
     val totalApplicationProposals = applicants.size
 
     val totalExpectedAmount = totalRepresentation * amountPerPerson
-    val totalActualAmount = payers.sumOf { it.totalAmount }
+    val totalActualAmount = payers.sumOf {
+        when {
+            it.excessAmount > 0.0 && it.excessAmountReturned -> it.totalAmount - it.excessAmount
+            it.lessAmount > 0.0 -> it.totalAmount
+            else -> it.totalAmount
+        }
+    }
+
 
     val totalGivenToRecipients = recipients.filter { it.givenTime != null }.sumOf { it.givenAmount ?: 0.0 }
     val totalGivenToApplicants = applicants.filter { it.givenTime != null }.sumOf { it.givenAmount ?: 0.0 }
@@ -56,7 +63,7 @@ fun ZakatEdition.detail(): ZakatEditionDetailResponse {
     val amountReport = ZakatEditionAmountReport(
         totalExpectedAmount = totalExpectedAmount,
         totalActualAmount = totalActualAmount,
-        totalExcessAmount = payers.sumOf { it.excessAmount },
+        totalExcessAmount = payers.filter { !it.excessAmountReturned }.sumOf { it.excessAmount },
         totalLessAmount = payers.sumOf { it.lessAmount },
         totalGivenToRecipients = totalGivenToRecipients,
         totalGivenToApplicants = totalGivenToApplicants,

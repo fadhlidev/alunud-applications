@@ -1,30 +1,31 @@
 package com.alunud.application.zakatfitrah.dto
 
+import com.alunud.annotation.validator.MinDoubleOrNull
+import com.alunud.annotation.validator.MinLongOrNull
+import com.alunud.annotation.validator.NotBlankOrNull
 import jakarta.annotation.Nullable
 import jakarta.validation.constraints.AssertTrue
-import jakarta.validation.constraints.Min
-import jakarta.validation.constraints.NotBlank
 
 data class UpdateZakatApplicantDto(
     @field:Nullable
-    @field:NotBlank(message = "Institution cant be empty")
-    val institutionName: String?,
+    @field:NotBlankOrNull(message = "Institution name cant be empty")
+    val institutionName: String? = null,
 
     @field:Nullable
-    @field:NotBlank(message = "Institution address cant be empty")
-    val institutionAddress: String?,
+    @field:NotBlankOrNull(message = "Institution address cant be empty")
+    val institutionAddress: String? = null,
 
     @field:Nullable
-    @field:Min(value = 0, message = "Received time cannot be less than January 1, 1970")
-    val receivedTime: Long?,
+    @field:MinLongOrNull(value = 0, message = "Received time cannot be less than January 1, 1970")
+    val receivedTime: Long? = null,
 
     @field:Nullable
-    @field:Min(value = 0, message = "Given time cannot be less than January 1, 1970")
-    val givenTime: Long?,
+    @field:MinLongOrNull(value = 0, message = "Given time cannot be less than January 1, 1970")
+    val givenTime: Long? = null,
 
     @field:Nullable
-    @field:Min(value = 1, message = "Minimum amount is 1")
-    val givenAmount: Double?
+    @field:MinDoubleOrNull(value = 1.0, message = "Minimum amount is 1.0")
+    val givenAmount: Double? = null
 ) {
 
     @AssertTrue(message = "Given time cannot be less than or equal to received time")

@@ -1,26 +1,26 @@
 package com.alunud.application.zakatfitrah.dto
 
+import com.alunud.annotation.validator.*
 import jakarta.annotation.Nullable
-import jakarta.validation.constraints.Min
-import jakarta.validation.constraints.NotBlank
 
 data class UpdateZakatPayerDto(
     @field:Nullable
-    @field:NotBlank(message = "Name cant be empty")
-    val name: String?,
+    @field:NotBlankOrNull(message = "Name cant be empty")
+    val name: String? = null,
 
     @field:Nullable
-    @field:NotBlank(message = "Address cant be empty")
-    val address: String?,
+    @field:NotBlankOrNull(message = "Address cant be empty")
+    val address: String? = null,
 
     @field:Nullable
-    @field:Min(value = 1, message = "Minimum number of people is 1")
-    val totalPeople: Int?,
+    @field:MinIntOrNull(value = 1, message = "Minimum number of people is 1")
+    val totalPeople: Int? = null,
 
     @field:Nullable
-    @field:Min(value = 1, message = "Minimum amount is 1")
-    val totalAmount: Double?,
+    @field:MinDoubleOrNull(value = 1.0, message = "Minimum amount is 1.0")
+    val totalAmount: Double? = null,
 
     @field:Nullable
-    val excessAmountReturned: Boolean?
+    @field:BooleanOrNull(message = "Excess amount returned must be a boolean")
+    val excessAmountReturned: Boolean? = null
 )

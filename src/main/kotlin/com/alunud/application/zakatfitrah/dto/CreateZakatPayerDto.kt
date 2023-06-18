@@ -1,5 +1,6 @@
 package com.alunud.application.zakatfitrah.dto
 
+import com.alunud.annotation.validator.NotBlankOrNull
 import jakarta.annotation.Nullable
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
@@ -10,7 +11,7 @@ data class CreateZakatPayerDto(
     val name: String,
 
     @field:Nullable
-    @field:NotBlank(message = "Address cant be empty")
+    @field:NotBlankOrNull(message = "Address cant be empty")
     val address: String? = null,
 
     @field:NotNull(message = "Total people is required")

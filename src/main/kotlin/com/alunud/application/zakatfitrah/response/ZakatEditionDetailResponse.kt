@@ -43,7 +43,7 @@ fun ZakatEdition.detail(): ZakatEditionDetailResponse {
     val totalIndividual = recipients.size
     val totalApplicationProposals = applicants.size
 
-    val totalExpectedAmount = totalRepresentation * amountPerPerson
+    val totalExpectedAmount = representativeCumulativeTotal * amountPerPerson
     val totalActualAmount = payers.sumOf {
         when {
             it.excessAmount > 0.0 && it.excessAmountReturned -> it.totalAmount - it.excessAmount

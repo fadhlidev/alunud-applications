@@ -26,7 +26,7 @@ class ZakatEditionServiceImplTest(
 ) {
 
     @AfterEach
-    fun clearZakatEditionRepository() {
+    fun `clear zakat edition repository`() {
         zakatEditionRepository.deleteAll()
     }
 

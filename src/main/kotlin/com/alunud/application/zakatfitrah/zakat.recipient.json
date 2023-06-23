@@ -1,0 +1,526 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Zakat Recipient API",
+    "description": "Al Unud Application - Zakat Fitrah",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Fadhli Syaifullah",
+      "email": "me@fadhli.dev"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local development server"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/zakatfitrah/{year}/recipients": {
+      "get": {
+        "summary": "Get Zakat Fitrah Edition Recipients",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "year",
+            "schema": {
+              "type": "integer",
+              "example": 2023
+            },
+            "required": true,
+            "description": "Year of Zakat fitrah edition"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success get zakat fitrah edition recipients",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "SUCCESS_GET_ZAKAT_FITRAH_EDITION_RECIPIENTS"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ZakatRecipient"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed to get zakat fitrah edition recipients",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "FAILED_GET_ZAKAT_FITRAH_EDITION_RECIPIENTS"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Zakat fitrah 2023 edition not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add Zakat Fitrah Edition Recipient",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "year",
+            "schema": {
+              "type": "integer",
+              "example": 2023
+            },
+            "required": true,
+            "description": "Year of Zakat fitrah edition"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "nullable": false,
+                    "example": "Fulan"
+                  },
+                  "address": {
+                    "type": "string",
+                    "nullable": true,
+                    "example": "Pojok 2/3"
+                  },
+                  "givenTime": {
+                    "type": "integer",
+                    "nullable": true,
+                    "example": null
+                  },
+                  "givenAmount": {
+                    "type": "integer",
+                    "nullable": false,
+                    "example": 5
+                  }
+                },
+                "required": [
+                  "name",
+                  "givenAmount"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success add zakat fitrah edition recipient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "SUCCESS_ADD_ZAKAT_FITRAH_EDITION_RECIPIENT"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/ZakatRecipient"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "givenTime": {
+                              "type": "integer",
+                              "example": null
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed to add zakat fitrah edition recipient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "FAILED_ADD_ZAKAT_FITRAH_EDITION_RECIPIENT"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Name is required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed to add zakat fitrah edition recipient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "FAILED_ADD_ZAKAT_FITRAH_EDITION_RECIPIENT"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Zakat fitrah 2023 edition not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/zakatfitrah/{year}/recipients/{id}": {
+      "get": {
+        "summary": "Get Zakat Fitrah Edition Recipient",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "year",
+            "schema": {
+              "type": "integer",
+              "example": 2023
+            },
+            "required": true,
+            "description": "Year of Zakat fitrah edition"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "example": "34d6f987-7b1a-4baf-a239-8234c809f123"
+            },
+            "required": true,
+            "description": "ID of Zakat fitrah recipient"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success get zakat fitrah edition recipient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "SUCCESS_GET_ZAKAT_FITRAH_EDITION_RECIPIENT"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ZakatRecipient"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed to get zakat fitrah edition recipient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "FAILED_GET_ZAKAT_FITRAH_EDITION_RECIPIENT"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Zakat fitrah recipient (34d6f987-7b1a-4baf-a239-8234c809f123) not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Zakat Fitrah Edition Recipient",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "year",
+            "schema": {
+              "type": "integer",
+              "example": 2023
+            },
+            "required": true,
+            "description": "Year of Zakat fitrah edition"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "example": "34d6f987-7b1a-4baf-a239-8234c809f123"
+            },
+            "required": true,
+            "description": "ID of Zakat fitrah recipient"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "nullable": true,
+                    "example": "Fulan"
+                  },
+                  "address": {
+                    "type": "string",
+                    "nullable": true,
+                    "example": "Pojok 2/3"
+                  },
+                  "givenTime": {
+                    "type": "integer",
+                    "nullable": true,
+                    "example": 1681884000000
+                  },
+                  "givenAmount": {
+                    "type": "integer",
+                    "nullable": true,
+                    "example": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success update zakat fitrah edition recipient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "SUCCESS_UPDATE_ZAKAT_FITRAH_EDITION_RECIPIENT"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ZakatRecipient"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed to update zakat fitrah edition recipient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "FAILED_UPDATE_ZAKAT_FITRAH_EDITION_RECIPIENT"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Name cant be empty"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed to update zakat fitrah edition recipient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "FAILED_UPDATE_ZAKAT_FITRAH_EDITION_RECIPIENT"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Zakat fitrah recipient (34d6f987-7b1a-4baf-a239-8234c809f123) not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Zakat Fitrah Edition Recipient",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "year",
+            "schema": {
+              "type": "integer",
+              "example": 2023
+            },
+            "required": true,
+            "description": "Year of Zakat fitrah edition"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "example": "34d6f987-7b1a-4baf-a239-8234c809f123"
+            },
+            "required": true,
+            "description": "ID of Zakat fitrah recipient"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success delete Zakat fitrah recipient"
+          },
+          "404": {
+            "description": "Failed to delete zakat fitrah edition recipient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "FAILED_DELETE_ZAKAT_FITRAH_EDITION_RECIPIENT"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Zakat fitrah recipient (34d6f987-7b1a-4baf-a239-8234c809f123) not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "ZakatRecipient": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "34d6f987-7b1a-4baf-a239-8234c809f123"
+          },
+          "name": {
+            "type": "string",
+            "example": "Fulan"
+          },
+          "address": {
+            "type": "string",
+            "example": "Pojok 2/3"
+          },
+          "givenTime": {
+            "type": "integer",
+            "example": 1681884000000
+          },
+          "givenAmount": {
+            "type": "integer",
+            "example": 5
+          }
+        }
+      }
+    }
+  }
+}

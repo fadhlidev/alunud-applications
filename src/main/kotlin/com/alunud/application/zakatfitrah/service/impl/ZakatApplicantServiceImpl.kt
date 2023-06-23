@@ -1,5 +1,6 @@
 package com.alunud.application.zakatfitrah.service.impl
 
+import com.alunud.annotation.aspect.Validate
 import com.alunud.application.zakatfitrah.dto.CreateZakatApplicantDto
 import com.alunud.application.zakatfitrah.dto.UpdateZakatApplicantDto
 import com.alunud.application.zakatfitrah.entity.ZakatApplicant
@@ -26,10 +27,9 @@ class ZakatApplicantServiceImpl(
 ) :
     ZakatApplicantService {
 
+    @Validate
     @Transactional
     override fun create(year: Int, dto: CreateZakatApplicantDto): ZakatApplicantResponse {
-        validators.validate(dto)
-
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
 
@@ -51,10 +51,9 @@ class ZakatApplicantServiceImpl(
         return applicant.response()
     }
 
+    @Validate
     @Transactional
     override fun update(year: Int, id: UUID, dto: UpdateZakatApplicantDto): ZakatApplicantResponse {
-        validators.validate(dto)
-
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
 

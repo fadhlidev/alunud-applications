@@ -32,7 +32,7 @@ class ZakatApplicantServiceImplTest(
     lateinit var zakat: ZakatEdition
 
     @BeforeEach
-    fun createZakatEdition() {
+    fun `create zakat edition`() {
         val zakat = ZakatEdition(
             id = UUID.randomUUID(),
             year = 2023,
@@ -47,12 +47,12 @@ class ZakatApplicantServiceImplTest(
     }
 
     @AfterEach
-    fun cleanZakatApplicantRepository() {
+    fun `clean zakat applicant repository`() {
         zakatApplicantRepository.deleteAll()
     }
 
     @AfterEach
-    fun cleanZakatEditionRepository() {
+    fun `clean zakat edition repository`() {
         zakatEditionRepository.deleteAll()
     }
 

@@ -155,4 +155,38 @@ class UserServiceImplTest(
         }
     }
 
+    @Test
+    fun `should returns list of user`() {
+        assertEquals(0, userService.findAll().size)
+
+        userRepository.save(User(
+            id = UUID.randomUUID(),
+            username = "wahid",
+            email = null,
+            password = "password"
+        ))
+
+        assertEquals(1, userService.findAll().size)
+
+        userRepository.save(User(
+            id = UUID.randomUUID(),
+            username = "isnaini",
+            email = null,
+            password = "password"
+        ))
+
+        userRepository.save(User(
+            id = UUID.randomUUID(),
+            username = "salasa",
+            email = null,
+            password = "password"
+        ))
+
+        val  result = userService.findAll()
+        assertEquals(3, result.size)
+        assertEquals("isnaini", result[0].username)
+        assertEquals("salasa", result[1].username)
+        assertEquals("wahid", result[2].username)
+    }
+
 }

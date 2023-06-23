@@ -11,6 +11,7 @@ import com.alunud.exception.EntityExistsException
 import jakarta.transaction.Transactional
 import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Sort
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
@@ -38,6 +39,11 @@ class UserServiceImpl(
 
         userRepository.save(user)
         return user.response()
+    }
+
+    @Transactional
+    override fun findAll(): List<UserResponse> {
+        return userRepository.findAll(Sort.by("username")).map { it.response() }
     }
 
 }

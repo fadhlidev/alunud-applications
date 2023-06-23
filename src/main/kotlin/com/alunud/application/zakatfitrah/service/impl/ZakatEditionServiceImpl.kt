@@ -40,7 +40,7 @@ class ZakatEditionServiceImpl(
         )
 
         zakatEditionRepository.findByYear(zakat.year)?.let {
-            throw EntityExistsException("")
+            throw EntityExistsException("Zakat fitrah ${zakat.year} edition already exists")
         }
 
         zakatEditionRepository.save(zakat)

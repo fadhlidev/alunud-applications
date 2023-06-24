@@ -48,6 +48,12 @@ class AuthServiceImpl(
         return user.authenticate(accessToken)
     }
 
+    override suspend fun logout(token: String) {
+        if (redisService.isExists(token)) {
+            redisService.deleteValue(token)
+        }
+    }
+
     private suspend fun generateAuthenticationToken(): String {
         val token = generateRandomString(TOKEN_LENGTH)
 

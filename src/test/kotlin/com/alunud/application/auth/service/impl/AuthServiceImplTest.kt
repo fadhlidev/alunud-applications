@@ -120,4 +120,23 @@ class AuthServiceImplTest(
         }
     }
 
+    @Test
+    fun `should logged user out`() = runBlocking {
+        val user = User(
+            id = UUID.randomUUID(),
+            username = "fulan",
+            email = "fulan@email.com",
+            password = passwordEncoder.encode("password")
+        )
+        userRepository.save(user)
+        assertNotNull(userRepository.findByUsername(user.username))
+
+        val result = authService.login(LoginDto("fulan", "password"))
+        val authenticatedUser = redisService.getValue(result.token)
+        assertNotNull(authenticatedUser)
+
+        authService.logout(result.token)
+        assertNull(redisService.getValue(result.token))
+    }
+
 }

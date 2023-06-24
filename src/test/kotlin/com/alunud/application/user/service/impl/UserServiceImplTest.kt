@@ -166,7 +166,7 @@ class UserServiceImplTest(
             id = UUID.randomUUID(),
             username = "wahid",
             email = null,
-            password = "password"
+            password = passwordEncoder.encode("password")
         ))
 
         assertEquals(1, userService.findAll().size)
@@ -175,14 +175,14 @@ class UserServiceImplTest(
             id = UUID.randomUUID(),
             username = "isnaini",
             email = null,
-            password = "password"
+            password = passwordEncoder.encode("password")
         ))
 
         userRepository.save(User(
             id = UUID.randomUUID(),
             username = "salasa",
             email = null,
-            password = "password"
+            password = passwordEncoder.encode("password")
         ))
 
         val  result = userService.findAll()
@@ -198,7 +198,7 @@ class UserServiceImplTest(
             id = UUID.randomUUID(),
             username = "wahid",
             email = "wahid@email.com",
-            password = "password"
+            password = passwordEncoder.encode("password")
         )
 
         userRepository.save(user)
@@ -226,7 +226,7 @@ class UserServiceImplTest(
             id = UUID.randomUUID(),
             username = "wahid",
             email = "wahid@email.com",
-            password = "password"
+            password = passwordEncoder.encode("password")
         )
 
         userRepository.save(user)
@@ -246,7 +246,7 @@ class UserServiceImplTest(
             id = UUID.randomUUID(),
             username = "wahid",
             email = "wahid@email.com",
-            password = "password"
+            password = passwordEncoder.encode("password")
         )
 
         userRepository.save(user)
@@ -277,7 +277,7 @@ class UserServiceImplTest(
             id = UUID.randomUUID(),
             username = "wahid",
             email = "wahid@email.com",
-            password = "password"
+            password = passwordEncoder.encode("password")
         )
 
         userRepository.save(user)
@@ -302,7 +302,7 @@ class UserServiceImplTest(
             id = UUID.randomUUID(),
             username = "wahid",
             email = "wahid@email.com",
-            password = "password"
+            password = passwordEncoder.encode("password")
         )
 
         userRepository.save(user)
@@ -368,7 +368,7 @@ class UserServiceImplTest(
             id = UUID.randomUUID(),
             username = "wahid",
             email = "wahid@email.com",
-            password = "password"
+            password = passwordEncoder.encode("password")
         )
 
         userRepository.save(user)

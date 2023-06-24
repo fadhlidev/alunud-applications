@@ -55,6 +55,10 @@ class InMemoryRedisService : RedisService {
         storage.clear()
     }
 
+    override suspend fun isExists(key: String): Boolean {
+        return storage.containsKey(key)
+    }
+
     private fun removeExpiredValues() {
         val currentTime = System.currentTimeMillis()
         val expiredKeys = storage.filterValues { it.second < currentTime }.keys

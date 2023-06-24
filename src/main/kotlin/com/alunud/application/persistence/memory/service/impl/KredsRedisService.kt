@@ -42,4 +42,9 @@ class KredsRedisService(private val redisClient: KredsClient) : RedisService {
         }
     }
 
+    override suspend fun isExists(key: String): Boolean {
+        val result = redisClient.exists("$prefix-$key")
+        return result.toInt() == 1
+    }
+
 }

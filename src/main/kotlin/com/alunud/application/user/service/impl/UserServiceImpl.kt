@@ -8,6 +8,7 @@ import com.alunud.application.user.response.UserResponse
 import com.alunud.application.user.response.response
 import com.alunud.application.user.service.UserService
 import com.alunud.exception.EntityExistsException
+import com.alunud.exception.NotFoundException
 import jakarta.transaction.Transactional
 import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -44,6 +45,14 @@ class UserServiceImpl(
     @Transactional
     override fun findAll(): List<UserResponse> {
         return userRepository.findAll(Sort.by("username")).map { it.response() }
+    }
+
+    @Transactional
+    override fun findOne(username: String): UserResponse {
+        val user = userRepository.findByUsername(username)
+            ?: throw NotFoundException("User with username $username not found")
+
+        return user.response()
     }
 
 }

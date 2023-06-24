@@ -7,6 +7,7 @@ import com.alunud.application.user.repository.UserRepository
 import com.alunud.application.user.response.maskEmail
 import com.alunud.application.user.service.UserService
 import com.alunud.exception.EntityExistsException
+import com.alunud.exception.NotFoundException
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
@@ -187,6 +188,34 @@ class UserServiceImplTest(
         assertEquals("isnaini", result[0].username)
         assertEquals("salasa", result[1].username)
         assertEquals("wahid", result[2].username)
+    }
+
+    @Test
+    fun `should find user`() {
+        val user = User(
+            id = UUID.randomUUID(),
+            username = "wahid",
+            email = "wahid@email.com",
+            password = "password"
+        )
+
+        userRepository.save(user)
+
+        assertNotNull(userRepository.findByUsername(user.username))
+
+        val result = userService.findOne(user.username)
+
+        assertNotNull(result)
+        assertNotNull(result.id)
+        assertEquals(user.username, result.username)
+        assertEquals(maskEmail(user.email), result.email)
+    }
+
+    @Test
+    fun `should not find user`() {
+        assertThrows<NotFoundException> {
+            userService.findOne("fulan")
+        }
     }
 
 }

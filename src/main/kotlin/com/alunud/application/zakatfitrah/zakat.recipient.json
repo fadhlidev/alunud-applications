@@ -17,7 +17,7 @@
   ],
   "security": [
     {
-      "BearerAuth": []
+      "cookieAuth": []
     }
   ],
   "paths": {
@@ -490,9 +490,10 @@
   },
   "components": {
     "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "token"
       }
     },
     "schemas": {

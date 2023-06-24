@@ -11,4 +11,5 @@ interface UserService {
     fun findOne(username: String): UserResponse
     fun changeEmail(username: String, dto: ChangeEmailDto)
     fun changePassword(username: String, dto: ChangePasswordDto)
+    fun delete(username: String)
 }

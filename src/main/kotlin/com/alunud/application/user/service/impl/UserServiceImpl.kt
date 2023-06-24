@@ -91,4 +91,12 @@ class UserServiceImpl(
         userRepository.save(user)
     }
 
+    @Transactional
+    override fun delete(username: String) {
+        val user = userRepository.findByUsername(username)
+            ?: throw NotFoundException("User with username $username not found")
+
+        userRepository.delete(user)
+    }
+
 }

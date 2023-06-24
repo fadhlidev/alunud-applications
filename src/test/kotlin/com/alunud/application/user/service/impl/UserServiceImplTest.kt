@@ -362,4 +362,29 @@ class UserServiceImplTest(
         }
     }
 
+    @Test
+    fun `should delete user`() {
+        val user = User(
+            id = UUID.randomUUID(),
+            username = "wahid",
+            email = "wahid@email.com",
+            password = "password"
+        )
+
+        userRepository.save(user)
+
+        assertNotNull(userRepository.findByUsername(user.username))
+
+        userService.delete(user.username)
+
+        assertNull(userRepository.findByUsername(user.username))
+    }
+
+    @Test
+    fun `should not delete user`() {
+        assertThrows<NotFoundException> {
+            userService.delete("fulan")
+        }
+    }
+
 }

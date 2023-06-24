@@ -1,3 +1,3 @@
 package com.alunud.exception
 
-class EntityExistsException(message: String) : Exception(message)
+class EntityExistsException(message: String) : RuntimeException(message)

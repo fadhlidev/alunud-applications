@@ -12,6 +12,9 @@ data class ZakatApplicantResponse (
     val givenAmount: Double?
 )
 
+/**
+ * Return response object of Zakat Applicant
+ */
 fun ZakatApplicant.response() = ZakatApplicantResponse(
     id = this.id,
     institutionName = this.institutionName,

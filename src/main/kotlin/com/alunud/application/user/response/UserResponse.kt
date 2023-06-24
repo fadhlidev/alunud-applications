@@ -9,6 +9,9 @@ data class UserResponse(
     val email: String?
 )
 
+/**
+ * Return response object of User
+ */
 fun User.response() = UserResponse(
     id = this.id,
     username = this.username,

@@ -36,6 +36,9 @@ data class ZakatEditionAmountReport(
     val totalRemaining: Double
 )
 
+/**
+ * Return response object of Zakat Edition Detail
+ */
 fun ZakatEdition.detail(): ZakatEditionDetailResponse {
     val totalRepresentation = payers.size
     val representativeCumulativeTotal = payers.sumOf { it.totalPeople }

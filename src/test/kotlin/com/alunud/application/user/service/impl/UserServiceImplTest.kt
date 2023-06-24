@@ -1,6 +1,7 @@
 package com.alunud.application.user.service.impl
 
 import com.alunud.application.AlUnudApplication
+import com.alunud.application.user.dto.ChangeEmailDto
 import com.alunud.application.user.dto.RegisterUserDto
 import com.alunud.application.user.entity.User
 import com.alunud.application.user.repository.UserRepository
@@ -215,6 +216,57 @@ class UserServiceImplTest(
     fun `should not find user`() {
         assertThrows<NotFoundException> {
             userService.findOne("fulan")
+        }
+    }
+
+    @Test
+    fun `should change user email`() {
+        val user = User(
+            id = UUID.randomUUID(),
+            username = "wahid",
+            email = "wahid@email.com",
+            password = "password"
+        )
+
+        userRepository.save(user)
+        assertNotNull(userRepository.findByUsername(user.username))
+
+        val payload = ChangeEmailDto("wahiddun@email.com")
+        userService.changeEmail(user.username, payload)
+
+        val result = userRepository.findByUsername(user.username)
+        assertNotNull(result)
+        assertEquals(payload.email, result?.email)
+    }
+
+    @Test
+    fun `should not change user email because invalid payload`() {
+        val user = User(
+            id = UUID.randomUUID(),
+            username = "wahid",
+            email = "wahid@email.com",
+            password = "password"
+        )
+
+        userRepository.save(user)
+        assertNotNull(userRepository.findByUsername(user.username))
+
+        assertThrows<ConstraintViolationException> {
+            val payload = ChangeEmailDto("")
+            userService.changeEmail(user.username, payload)
+        }
+
+        assertThrows<ConstraintViolationException> {
+            val payload = ChangeEmailDto("wahiddun")
+            userService.changeEmail(user.username, payload)
+        }
+    }
+
+    @Test
+    fun `should not change user email because user not found`() {
+        assertThrows<NotFoundException> {
+            val payload = ChangeEmailDto("fulan@email.com")
+            userService.changeEmail("fulan", payload)
         }
     }
 

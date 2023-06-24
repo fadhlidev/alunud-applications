@@ -1,6 +1,7 @@
 package com.alunud.application.user.service.impl
 
 import com.alunud.annotation.aspect.Validate
+import com.alunud.application.user.dto.ChangeEmailDto
 import com.alunud.application.user.dto.RegisterUserDto
 import com.alunud.application.user.entity.User
 import com.alunud.application.user.repository.UserRepository
@@ -53,6 +54,19 @@ class UserServiceImpl(
             ?: throw NotFoundException("User with username $username not found")
 
         return user.response()
+    }
+
+    @Validate
+    @Transactional
+    override fun changeEmail(username: String, dto: ChangeEmailDto) {
+        val user = userRepository.findByUsername(username)
+            ?: throw NotFoundException("User with username $username not found")
+
+        user.apply {
+            email = dto.email
+        }
+
+        userRepository.save(user)
     }
 
 }

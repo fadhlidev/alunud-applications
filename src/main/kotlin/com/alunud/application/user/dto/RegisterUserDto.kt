@@ -17,7 +17,9 @@ data class RegisterUserDto(
     val password: String,
 
     @field:NotBlank(message = "Confirm password is required")
-    val confirmPassword: String
+    val confirmPassword: String,
+
+    val roles: MutableSet<String> = mutableSetOf("ROLE_USER")
 ) {
 
     @AssertTrue(message = "Passwords do not match")

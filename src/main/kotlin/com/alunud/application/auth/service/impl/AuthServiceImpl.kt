@@ -7,10 +7,12 @@ import com.alunud.application.auth.response.authenticate
 import com.alunud.application.auth.service.AuthService
 import com.alunud.application.persistence.memory.service.RedisService
 import com.alunud.application.user.entity.User
+import com.alunud.application.user.repository.RoleRepository
 import com.alunud.application.user.repository.UserRepository
 import com.alunud.application.user.response.response
 import com.alunud.exception.AuthenticationException
 import com.alunud.exception.EntityExistsException
+import com.alunud.exception.NotFoundException
 import com.alunud.util.Validators
 import com.alunud.util.function.generateRandomString
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -23,6 +25,7 @@ import java.util.*
 @Service
 class AuthServiceImpl(
     @Autowired private val userRepository: UserRepository,
+    @Autowired private val roleRepository: RoleRepository,
     @Autowired private val passwordEncoder: BCryptPasswordEncoder,
     @Autowired private val objectMapper: ObjectMapper,
     @Autowired private val redisService: RedisService,
@@ -72,6 +75,10 @@ class AuthServiceImpl(
             email = dto.email,
             password = passwordEncoder.encode(dto.password)
         )
+
+        val role = roleRepository.findByName("ROLE_USER")
+            ?: throw NotFoundException("Role not found: ROLE_USER")
+        user.roles.add(role)
 
         userRepository.save(user)
 

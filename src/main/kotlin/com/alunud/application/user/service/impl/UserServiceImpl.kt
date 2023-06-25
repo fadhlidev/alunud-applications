@@ -5,6 +5,7 @@ import com.alunud.application.user.dto.ChangeEmailDto
 import com.alunud.application.user.dto.ChangePasswordDto
 import com.alunud.application.user.dto.RegisterUserDto
 import com.alunud.application.user.entity.User
+import com.alunud.application.user.repository.RoleRepository
 import com.alunud.application.user.repository.UserRepository
 import com.alunud.application.user.response.UserResponse
 import com.alunud.application.user.response.response
@@ -25,6 +26,7 @@ import java.util.*
 @Transactional
 class UserServiceImpl(
     @Autowired private val userRepository: UserRepository,
+    @Autowired private val roleRepository: RoleRepository,
     @Autowired private val passwordEncoder: BCryptPasswordEncoder,
     @Autowired private val validators: Validators
 ) : UserService {
@@ -41,6 +43,12 @@ class UserServiceImpl(
             email = dto.email,
             password = passwordEncoder.encode(dto.password)
         )
+
+        dto.roles.forEach {
+            val role = roleRepository.findByName(it)
+                ?: throw NotFoundException("Role not found: $it")
+            user.roles.add(role)
+        }
 
         userRepository.save(user)
         return user.response()

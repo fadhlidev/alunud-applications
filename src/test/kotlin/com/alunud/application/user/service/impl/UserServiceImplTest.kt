@@ -19,10 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @SpringBootTest(classes = [AlUnudApplication::class])
 @ActiveProfiles("test")
+@Transactional
 class UserServiceImplTest(
     @Autowired val userService: UserService,
     @Autowired val userRepository: UserRepository,
@@ -53,6 +55,11 @@ class UserServiceImplTest(
         assertEquals(payload.username, user?.username)
         assertEquals(payload.email, user?.email)
         assertTrue { passwordEncoder.matches(payload.password, user?.password) }
+
+        user?.roles?.run {
+            val roles = this.map { it.name }.toList()
+            assertEquals(listOf("ROLE_USER"), roles)
+        }
     }
 
     @Test
@@ -73,6 +80,37 @@ class UserServiceImplTest(
         assertEquals(payload.username, user?.username)
         assertNull(user?.email)
         assertTrue { passwordEncoder.matches(payload.password, user?.password) }
+
+        user?.roles?.run {
+            val roles = this.map { it.name }.toList()
+            assertEquals(listOf("ROLE_USER"), roles)
+        }
+    }
+
+    @Test
+    fun `should register user with specified roles`() {
+        val payload = RegisterUserDto(
+            username = "fulan",
+            password = "password",
+            confirmPassword = "password",
+            roles = mutableSetOf("ROLE_ADMIN")
+        )
+
+        val result = userService.register(payload)
+        assertNotNull(result)
+        assertEquals(payload.username, result.username)
+        assertNull(result.email)
+
+        val user = userRepository.findByUsername(result.username)
+        assertNotNull(user)
+        assertEquals(payload.username, user?.username)
+        assertNull(user?.email)
+        assertTrue { passwordEncoder.matches(payload.password, user?.password) }
+
+        user?.roles?.run {
+            val roles = this.map { it.name }.toList()
+            assertEquals(listOf("ROLE_ADMIN"), roles)
+        }
     }
 
     @Test

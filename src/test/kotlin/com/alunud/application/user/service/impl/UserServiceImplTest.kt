@@ -168,6 +168,17 @@ class UserServiceImplTest(
 
         assertThrows<ConstraintViolationException> {
             val payload = RegisterUserDto(
+                username = "hi",
+                email = "fulan@email.com",
+                password = "password",
+                confirmPassword = "password"
+            )
+
+            userService.register(payload)
+        }
+
+        assertThrows<ConstraintViolationException> {
+            val payload = RegisterUserDto(
                 username = "fulan",
                 email = "",
                 password = "password",
@@ -194,6 +205,17 @@ class UserServiceImplTest(
                 email = "fulan@email.com",
                 password = "password",
                 confirmPassword = ""
+            )
+
+            userService.register(payload)
+        }
+
+        assertThrows<ConstraintViolationException> {
+            val payload = RegisterUserDto(
+                username = "fulan",
+                email = "fulan@email.com",
+                password = "pwd",
+                confirmPassword = "pwd"
             )
 
             userService.register(payload)

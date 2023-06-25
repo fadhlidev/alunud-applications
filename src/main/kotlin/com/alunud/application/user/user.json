@@ -353,6 +353,69 @@
         }
       }
     },
+    "/api/users/{username}/roles": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "username",
+          "schema": {
+            "type": "string",
+            "example": "fulan"
+          },
+          "required": true,
+          "description": "User's username"
+        }
+      ],
+      "patch": {
+        "summary": "Update User Roles",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "roles": {
+                    "type": "array",
+                    "nullable": true,
+                    "example": ["ROLE_USER"]
+                  }
+                },
+                "required": ["roles"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success update user roles"
+          },
+          "404": {
+            "description": "Failed to update user roles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "FAILED_UPDATE_USER_ROLES"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "User with username fulan not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/users/{username}/password": {
       "parameters": [
         {

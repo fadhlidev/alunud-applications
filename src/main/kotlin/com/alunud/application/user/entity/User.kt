@@ -1,12 +1,6 @@
 package com.alunud.application.user.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.JoinTable
-import jakarta.persistence.ManyToMany
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.util.UUID
 
 @Entity
@@ -20,7 +14,7 @@ data class User(
     var email: String?,
     var password: String,
 
-    @field:ManyToMany
+    @field:ManyToMany(fetch = FetchType.LAZY)
     @field:JoinTable(
         name = "users_roles",
         joinColumns = [JoinColumn(

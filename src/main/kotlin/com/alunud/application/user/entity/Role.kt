@@ -1,10 +1,6 @@
 package com.alunud.application.user.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.ManyToMany
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.util.UUID
 
 @Entity
@@ -16,6 +12,6 @@ data class Role(
     @field:Column(nullable = false, unique = true)
     val name: String,
 
-    @field:ManyToMany(mappedBy = "roles")
+    @field:ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     val users: MutableList<User> = mutableListOf()
 )

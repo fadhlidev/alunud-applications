@@ -478,6 +478,10 @@
             "type": "string",
             "nullable": true,
             "example": "f***n@email.com"
+          },
+          "roles": {
+            "type": "array",
+            "example": ["ROLE_USER"]
           }
         }
       }

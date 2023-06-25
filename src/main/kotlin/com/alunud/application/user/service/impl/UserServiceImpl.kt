@@ -3,6 +3,7 @@ package com.alunud.application.user.service.impl
 import com.alunud.annotation.aspect.Validate
 import com.alunud.application.user.dto.ChangeEmailDto
 import com.alunud.application.user.dto.ChangePasswordDto
+import com.alunud.application.user.dto.ChangeRolesDto
 import com.alunud.application.user.dto.RegisterUserDto
 import com.alunud.application.user.entity.User
 import com.alunud.application.user.repository.RoleRepository
@@ -72,6 +73,20 @@ class UserServiceImpl(
 
         user.apply {
             email = dto.email
+        }
+
+        userRepository.save(user)
+    }
+
+    @Validate
+    override fun changeRoles(username: String, dto: ChangeRolesDto) {
+        val user = userRepository.findByUsername(username)
+            ?: throw NotFoundException("User with username $username not found")
+
+        dto.roles.forEach {
+            val role = roleRepository.findByName(it)
+                ?: throw NotFoundException("Role not found: $it")
+            user.roles.add(role)
         }
 
         userRepository.save(user)

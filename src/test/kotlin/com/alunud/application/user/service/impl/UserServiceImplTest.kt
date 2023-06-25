@@ -3,6 +3,7 @@ package com.alunud.application.user.service.impl
 import com.alunud.application.AlUnudApplication
 import com.alunud.application.user.dto.ChangeEmailDto
 import com.alunud.application.user.dto.ChangePasswordDto
+import com.alunud.application.user.dto.ChangeRolesDto
 import com.alunud.application.user.dto.RegisterUserDto
 import com.alunud.application.user.entity.User
 import com.alunud.application.user.repository.UserRepository
@@ -110,6 +111,20 @@ class UserServiceImplTest(
         user?.roles?.run {
             val roles = this.map { it.name }.toList()
             assertEquals(listOf("ROLE_ADMIN"), roles)
+        }
+    }
+
+    @Test
+    fun `should register user with invalid roles`() {
+        assertThrows<NotFoundException> {
+            val payload = RegisterUserDto(
+                username = "fulan",
+                password = "password",
+                confirmPassword = "password",
+                roles = mutableSetOf("WHATEVER")
+            )
+
+            userService.register(payload)
         }
     }
 
@@ -306,6 +321,55 @@ class UserServiceImplTest(
         assertThrows<NotFoundException> {
             val payload = ChangeEmailDto("fulan@email.com")
             userService.changeEmail("fulan", payload)
+        }
+    }
+
+    @Test
+    fun `should change user roles`() {
+        val user = User(
+            id = UUID.randomUUID(),
+            username = "wahid",
+            email = "wahid@email.com",
+            password = passwordEncoder.encode("password")
+        )
+
+        userRepository.save(user)
+        assertNotNull(userRepository.findByUsername(user.username))
+
+        val payload = ChangeRolesDto(listOf("ROLE_ADMIN"))
+        userService.changeRoles(user.username, payload)
+
+        val result = userRepository.findByUsername(user.username)
+        assertNotNull(result)
+        result?.roles?.run {
+            val roles = this.map { it.name }.toList()
+            assertEquals(listOf("ROLE_ADMIN"), roles)
+        }
+    }
+
+    @Test
+    fun `should not change user roles because invalid payload`() {
+        val user = User(
+            id = UUID.randomUUID(),
+            username = "wahid",
+            email = "wahid@email.com",
+            password = passwordEncoder.encode("password")
+        )
+
+        userRepository.save(user)
+        assertNotNull(userRepository.findByUsername(user.username))
+
+        assertThrows<NotFoundException> {
+            val payload = ChangeRolesDto(listOf("WHATEVER"))
+            userService.changeRoles(user.username, payload)
+        }
+    }
+
+    @Test
+    fun `should not change user roles because user not found`() {
+        assertThrows<NotFoundException> {
+            val payload = ChangeRolesDto(listOf("ROLE_ADMIN"))
+            userService.changeRoles("fulan", payload)
         }
     }
 

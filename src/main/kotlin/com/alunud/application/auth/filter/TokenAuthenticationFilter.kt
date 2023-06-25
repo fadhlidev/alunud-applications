@@ -29,7 +29,7 @@ class TokenAuthenticationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        if (isAuthenticationURI(request.requestURI)) {
+        if (isPublicURI(request.requestURI)) {
             return filterChain.doFilter(request, response)
         }
 
@@ -55,8 +55,14 @@ class TokenAuthenticationFilter(
         }
     }
 
-    private fun isAuthenticationURI(uri: String): Boolean {
-        return uri.startsWith("/api/auth/")
+    /**
+     * PUBLIC URIs:
+     * - Any URI that starts with `/api/auth`
+     * - Any URI that not starts with `/api`
+     */
+    private fun isPublicURI(uri: String): Boolean {
+        val regex = Regex("^/api/auth/(?!api/).*\$")
+        return regex.matches(uri)
     }
 
     private fun extractTokenFromCookie(request: HttpServletRequest): String? {

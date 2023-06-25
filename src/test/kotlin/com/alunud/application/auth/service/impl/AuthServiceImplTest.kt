@@ -245,6 +245,19 @@ class AuthServiceImplTest(
         assertThrows<ConstraintViolationException> {
             runBlocking {
                 val payload = SignupDto(
+                    username = "hi",
+                    email = "fulan@email.com",
+                    password = "password",
+                    confirmPassword = "password"
+                )
+
+                authService.signup(payload)
+            }
+        }
+
+        assertThrows<ConstraintViolationException> {
+            runBlocking {
+                val payload = SignupDto(
                     username = "fulan",
                     email = "",
                     password = "password",
@@ -275,6 +288,19 @@ class AuthServiceImplTest(
                     email = "fulan@email.com",
                     password = "password",
                     confirmPassword = ""
+                )
+
+                authService.signup(payload)
+            }
+        }
+
+        assertThrows<ConstraintViolationException> {
+            runBlocking {
+                val payload = SignupDto(
+                    username = "fulan",
+                    email = "fulan@email.com",
+                    password = "pwd",
+                    confirmPassword = "pwd"
                 )
 
                 authService.signup(payload)

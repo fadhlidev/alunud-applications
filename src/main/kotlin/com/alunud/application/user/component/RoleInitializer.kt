@@ -16,12 +16,14 @@ class RoleInitializer(@Autowired private val roleRepository: RoleRepository) : A
     }
 
     private fun initializeRoles() {
-        val roles = listOf(
-            Role(id = UUID.randomUUID(), name = "ROLE_ADMIN"),
-            Role(id = UUID.randomUUID(), name = "ROLE_USER")
-        )
+        createIfNotExists("ROLE_ADMIN")
+        createIfNotExists("ROLE_USER")
+    }
 
-        roleRepository.saveAll(roles)
+    private fun createIfNotExists(name: String): Role {
+        return roleRepository.run {
+            findByName(name) ?: save(Role(UUID.randomUUID(), name))
+        }
     }
 
 }

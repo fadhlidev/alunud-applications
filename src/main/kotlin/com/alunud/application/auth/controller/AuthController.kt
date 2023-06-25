@@ -31,6 +31,17 @@ class AuthController(@Autowired private val authService: AuthService) {
         )
     }
 
+    @DeleteMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    suspend fun logout(@CookieValue(name = "token", required = false) token: String, response: HttpServletResponse) {
+        val ok = authService.logout(token)
+        if (ok) {
+            val cookie = Cookie("token", "")
+            cookie.maxAge = 0
+            cookie.setAttribute("Expires", "Thu, 01 Jan 1970 00:00:00 GMT")
+            response.addCookie(cookie)
+        }
+    }
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)

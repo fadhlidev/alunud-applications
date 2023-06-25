@@ -6,6 +6,6 @@ import com.alunud.application.auth.response.AuthResponse
 
 interface AuthService {
     suspend fun login(dto: LoginDto): AuthResponse
-    suspend fun logout(token: String)
+    suspend fun logout(token: String): Boolean
     suspend fun signup(dto: SignupDto): AuthResponse
 }

@@ -55,10 +55,13 @@ class AuthServiceImpl(
         return user.authenticate(accessToken)
     }
 
-    override suspend fun logout(token: String) {
+    override suspend fun logout(token: String): Boolean {
         if (redisService.isExists(token)) {
             redisService.deleteValue(token)
+            return true
         }
+
+        return false
     }
 
     @Transactional

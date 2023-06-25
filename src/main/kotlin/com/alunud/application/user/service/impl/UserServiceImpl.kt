@@ -12,16 +12,17 @@ import com.alunud.application.user.service.UserService
 import com.alunud.exception.EntityExistsException
 import com.alunud.exception.NotFoundException
 import com.alunud.util.Validators
-import jakarta.transaction.Transactional
 import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
 @Slf4j
+@Transactional
 class UserServiceImpl(
     @Autowired private val userRepository: UserRepository,
     @Autowired private val passwordEncoder: BCryptPasswordEncoder,
@@ -29,7 +30,6 @@ class UserServiceImpl(
 ) : UserService {
 
     @Validate
-    @Transactional
     override fun register(dto: RegisterUserDto): UserResponse {
         userRepository.findByUsername(dto.username)?.run {
             throw EntityExistsException("User with username ${dto.username} is already exists")
@@ -46,12 +46,10 @@ class UserServiceImpl(
         return user.response()
     }
 
-    @Transactional
     override fun findAll(): List<UserResponse> {
         return userRepository.findAll(Sort.by("username")).map { it.response() }
     }
 
-    @Transactional
     override fun findOne(username: String): UserResponse {
         val user = userRepository.findByUsername(username)
             ?: throw NotFoundException("User with username $username not found")
@@ -60,7 +58,6 @@ class UserServiceImpl(
     }
 
     @Validate
-    @Transactional
     override fun changeEmail(username: String, dto: ChangeEmailDto) {
         val user = userRepository.findByUsername(username)
             ?: throw NotFoundException("User with username $username not found")
@@ -73,7 +70,6 @@ class UserServiceImpl(
     }
 
     @Validate
-    @Transactional
     override fun changePassword(username: String, dto: ChangePasswordDto) {
         val user = userRepository.findByUsername(username)
             ?: throw NotFoundException("User with username $username not found")
@@ -91,7 +87,6 @@ class UserServiceImpl(
         userRepository.save(user)
     }
 
-    @Transactional
     override fun delete(username: String) {
         val user = userRepository.findByUsername(username)
             ?: throw NotFoundException("User with username $username not found")

@@ -13,15 +13,16 @@ import com.alunud.application.zakatfitrah.service.ZakatEditionService
 import com.alunud.exception.EntityExistsException
 import com.alunud.exception.NotFoundException
 import com.alunud.util.Validators
-import jakarta.transaction.Transactional
 import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
 @Slf4j
+@Transactional
 class ZakatEditionServiceImpl(
     @Autowired private val zakatEditionRepository: ZakatEditionRepository,
     @Autowired private val validators: Validators
@@ -29,7 +30,6 @@ class ZakatEditionServiceImpl(
     ZakatEditionService {
 
     @Validate
-    @Transactional
     override fun create(dto: CreateZakatEditionDto): ZakatEditionResponse {
         val zakat = ZakatEdition(
             id = UUID.randomUUID(),
@@ -48,7 +48,6 @@ class ZakatEditionServiceImpl(
     }
 
     @Validate
-    @Transactional
     override fun update(year: Int, dto: UpdateZakatEditionDto): ZakatEditionResponse {
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
@@ -69,7 +68,6 @@ class ZakatEditionServiceImpl(
         return zakat.response()
     }
 
-    @Transactional
     override fun delete(year: Int) {
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
@@ -77,12 +75,10 @@ class ZakatEditionServiceImpl(
         zakatEditionRepository.delete(zakat)
     }
 
-    @Transactional
     override fun findAll(): List<ZakatEditionResponse> {
         return zakatEditionRepository.findAll(Sort.by("year")).map { it.response() }
     }
 
-    @Transactional
     override fun findOne(year: Int): ZakatEditionDetailResponse {
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")

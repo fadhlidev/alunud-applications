@@ -11,15 +11,16 @@ import com.alunud.application.zakatfitrah.response.response
 import com.alunud.application.zakatfitrah.service.ZakatApplicantService
 import com.alunud.exception.NotFoundException
 import com.alunud.util.Validators
-import jakarta.transaction.Transactional
 import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
 @Slf4j
+@Transactional
 class ZakatApplicantServiceImpl(
     @Autowired private val zakatApplicantRepository: ZakatApplicantRepository,
     @Autowired private val zakatEditionRepository: ZakatEditionRepository,
@@ -28,7 +29,6 @@ class ZakatApplicantServiceImpl(
     ZakatApplicantService {
 
     @Validate
-    @Transactional
     override fun create(year: Int, dto: CreateZakatApplicantDto): ZakatApplicantResponse {
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
@@ -52,7 +52,6 @@ class ZakatApplicantServiceImpl(
     }
 
     @Validate
-    @Transactional
     override fun update(year: Int, id: UUID, dto: UpdateZakatApplicantDto): ZakatApplicantResponse {
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
@@ -78,7 +77,6 @@ class ZakatApplicantServiceImpl(
         return applicant.response()
     }
 
-    @Transactional
     override fun delete(year: Int, id: UUID) {
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
@@ -89,7 +87,6 @@ class ZakatApplicantServiceImpl(
         zakatApplicantRepository.delete(applicant)
     }
 
-    @Transactional
     override fun findAll(year: Int): List<ZakatApplicantResponse> {
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")
@@ -97,7 +94,6 @@ class ZakatApplicantServiceImpl(
         return zakatApplicantRepository.findAllByZakatEdition(zakat, Sort.by("receivedTime")).map { it.response() }
     }
 
-    @Transactional
     override fun findOne(year: Int, id: UUID): ZakatApplicantResponse {
         val zakat = zakatEditionRepository.findByYear(year)
             ?: throw NotFoundException("Zakat fitrah $year edition not found")

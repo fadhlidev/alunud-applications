@@ -29,6 +29,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.reactivestreams:reactive-streams:1.0.4")
+	runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.1")
 	implementation("io.github.crackthecodeabhi:kreds:0.8")
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("org.postgresql:postgresql")

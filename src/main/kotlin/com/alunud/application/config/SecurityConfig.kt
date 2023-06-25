@@ -26,10 +26,7 @@ class SecurityConfig {
         return http
             .csrf { it.disable() }
             .cors { it.disable() }
-            .authorizeHttpRequests {
-                it.requestMatchers("/api/**").authenticated()
-                it.anyRequest().permitAll()
-            }
+            .authorizeHttpRequests { it.anyRequest().permitAll() }
             .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()
     }

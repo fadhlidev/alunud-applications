@@ -6,6 +6,7 @@ import com.alunud.application.auth.response.AuthResponse
 import com.alunud.application.auth.response.authenticate
 import com.alunud.application.auth.service.AuthService
 import com.alunud.application.persistence.memory.service.RedisService
+import com.alunud.application.user.entity.Role
 import com.alunud.application.user.entity.User
 import com.alunud.application.user.repository.RoleRepository
 import com.alunud.application.user.repository.UserRepository
@@ -85,8 +86,9 @@ class AuthServiceImpl(
             password = passwordEncoder.encode(dto.password)
         )
 
-        val role = roleRepository.findByName("ROLE_USER")
-            ?: throw NotFoundException("Role not found: ROLE_USER")
+        val role = roleRepository.let {
+            it.findByName("ROLE_USER") ?: it.save(Role(UUID.randomUUID(), "ROLE_USER"))
+        }
         user.roles.add(role)
 
         userRepository.save(user)

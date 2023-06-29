@@ -60,8 +60,11 @@ class AuthServiceImplTest(
         userRepository.save(user)
         assertNotNull(userRepository.findByUsername(user.username))
 
-        val payload = LoginDto("fulan", "password")
-        val result = authService.login(payload)
+        val result = authService.login {
+            username = "fulan"
+            password = "password"
+        }
+
         assertNotNull(result)
         assertEquals(user.id, result.id)
         assertEquals(user.username, result.username)
@@ -85,15 +88,19 @@ class AuthServiceImplTest(
 
         assertThrows<ConstraintViolationException> {
             runBlocking {
-                val payload = LoginDto("", "password")
-                authService.login(payload)
+                authService.login {
+                    username = ""
+                    password = "password"
+                }
             }
         }
 
         assertThrows<ConstraintViolationException> {
             runBlocking {
-                val payload = LoginDto("fulan", "")
-                authService.login(payload)
+                authService.login {
+                    username = "fulan"
+                    password = ""
+                }
             }
         }
     }
@@ -111,15 +118,19 @@ class AuthServiceImplTest(
 
         assertThrows<AuthenticationException> {
             runBlocking {
-                val payload = LoginDto("wahid", "password")
-                authService.login(payload)
+                authService.login {
+                    username = "wahid"
+                    password = "password"
+                }
             }
         }
 
         assertThrows<AuthenticationException> {
             runBlocking {
-                val payload = LoginDto("fulan", "wrong_password")
-                authService.login(payload)
+                authService.login {
+                    username = "fulan"
+                    password = "wrong_password"
+                }
             }
         }
     }
@@ -135,7 +146,11 @@ class AuthServiceImplTest(
         userRepository.save(user)
         assertNotNull(userRepository.findByUsername(user.username))
 
-        val result = authService.login(LoginDto("fulan", "password"))
+        val result = authService.login {
+            username = "fulan"
+            password = "password"
+        }
+
         val authenticatedUser = redisService.getValue(result.token)
         assertNotNull(authenticatedUser)
 
@@ -215,14 +230,12 @@ class AuthServiceImplTest(
 
         assertThrows<EntityExistsException> {
             runBlocking {
-                val payload = SignupDto(
-                    username = "fulan",
-                    email = "fulan@email.com",
-                    password = "password",
+                authService.signup {
+                    username = "fulan"
+                    email = "fulan@email.com"
+                    password = "password"
                     confirmPassword = "password"
-                )
-
-                authService.signup(payload)
+                }
             }
         }
     }
@@ -231,92 +244,78 @@ class AuthServiceImplTest(
     fun `should not signed user up because invalid payload`() {
         assertThrows<ConstraintViolationException> {
             runBlocking {
-                val payload = SignupDto(
-                    username = "",
-                    email = "fulan@email.com",
-                    password = "password",
+                authService.signup {
+                    username = ""
+                    email = "fulan@email.com"
+                    password = "password"
                     confirmPassword = "password"
-                )
-
-                authService.signup(payload)
+                }
             }
         }
 
         assertThrows<ConstraintViolationException> {
             runBlocking {
-                val payload = SignupDto(
-                    username = "hi",
-                    email = "fulan@email.com",
-                    password = "password",
+                authService.signup {
+                    username = "hi"
+                    email = "fulan@email.com"
+                    password = "password"
                     confirmPassword = "password"
-                )
-
-                authService.signup(payload)
+                }
             }
         }
 
         assertThrows<ConstraintViolationException> {
             runBlocking {
-                val payload = SignupDto(
-                    username = "fulan",
-                    email = "",
-                    password = "password",
+                authService.signup {
+                    username = "fulan"
+                    email = ""
+                    password = "password"
                     confirmPassword = "password"
-                )
-
-                authService.signup(payload)
+                }
             }
         }
 
         assertThrows<ConstraintViolationException> {
             runBlocking {
-                val payload = SignupDto(
-                    username = "fulan",
-                    email = "fulan@email.com",
-                    password = "",
+                authService.signup {
+                    username = "fulan"
+                    email = "fulan@email.com"
+                    password = ""
                     confirmPassword = "password"
-                )
-
-                authService.signup(payload)
+                }
             }
         }
 
         assertThrows<ConstraintViolationException> {
             runBlocking {
-                val payload = SignupDto(
-                    username = "fulan",
-                    email = "fulan@email.com",
-                    password = "password",
+                authService.signup {
+                    username = "fulan"
+                    email = "fulan@email.com"
+                    password = "password"
                     confirmPassword = ""
-                )
-
-                authService.signup(payload)
+                }
             }
         }
 
         assertThrows<ConstraintViolationException> {
             runBlocking {
-                val payload = SignupDto(
-                    username = "fulan",
-                    email = "fulan@email.com",
-                    password = "pwd",
+                authService.signup {
+                    username = "fulan"
+                    email = "fulan@email.com"
+                    password = "pwd"
                     confirmPassword = "pwd"
-                )
-
-                authService.signup(payload)
+                }
             }
         }
 
         assertThrows<ConstraintViolationException> {
             runBlocking {
-                val payload = SignupDto(
-                    username = "fulan",
-                    email = "fulan@email.com",
-                    password = "password",
+                authService.signup {
+                    username = "fulan"
+                    email = "fulan@email.com"
+                    password = "password"
                     confirmPassword = "wrong_password"
-                )
-
-                authService.signup(payload)
+                }
             }
         }
     }

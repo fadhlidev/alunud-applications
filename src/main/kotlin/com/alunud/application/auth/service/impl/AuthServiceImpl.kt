@@ -16,6 +16,7 @@ import com.alunud.exception.NotFoundException
 import com.alunud.util.Validators
 import com.alunud.util.function.generateRandomString
 import com.fasterxml.jackson.databind.ObjectMapper
+import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -23,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
+@Slf4j
+@Transactional
 class AuthServiceImpl(
     @Autowired private val userRepository: UserRepository,
     @Autowired private val roleRepository: RoleRepository,
@@ -37,7 +40,6 @@ class AuthServiceImpl(
         const val MAX_AUTHENTICATED_TIME: ULong = 604800U
     }
 
-    @Transactional
     override suspend fun login(dto: LoginDto): AuthResponse {
         validators.validate(dto)
 
@@ -55,6 +57,11 @@ class AuthServiceImpl(
         return user.authenticate(accessToken)
     }
 
+    override suspend fun login(block: LoginDto.() -> Unit): AuthResponse {
+        val dto = LoginDto().apply(block)
+        return login(dto)
+    }
+
     override suspend fun logout(token: String): Boolean {
         if (redisService.isExists(token)) {
             redisService.deleteValue(token)
@@ -64,7 +71,6 @@ class AuthServiceImpl(
         return false
     }
 
-    @Transactional
     override suspend fun signup(dto: SignupDto): AuthResponse {
         validators.validate(dto)
 
@@ -90,6 +96,11 @@ class AuthServiceImpl(
         redisService.setValue(accessToken, objectMapper.writeValueAsString(credential), MAX_AUTHENTICATED_TIME)
 
         return user.authenticate(accessToken)
+    }
+
+    override suspend fun signup(block: SignupDto.() -> Unit): AuthResponse {
+        val dto = SignupDto().apply(block)
+        return signup(dto)
     }
 
     private suspend fun generateAuthenticationToken(): String {

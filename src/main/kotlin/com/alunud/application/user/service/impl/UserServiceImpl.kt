@@ -55,6 +55,12 @@ class UserServiceImpl(
         return user.response()
     }
 
+    override fun register(block: RegisterUserDto.() -> Unit): UserResponse {
+        val dto = RegisterUserDto().apply(block)
+        validators.validate(dto)
+        return register(dto)
+    }
+
     override fun findAll(): List<UserResponse> {
         return userRepository.findAll(Sort.by("username")).map { it.response() }
     }

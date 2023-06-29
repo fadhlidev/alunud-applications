@@ -117,14 +117,12 @@ class UserServiceImplTest(
     @Test
     fun `should register user with invalid roles`() {
         assertThrows<NotFoundException> {
-            val payload = RegisterUserDto(
-                username = "fulan",
-                password = "password",
-                confirmPassword = "password",
+            userService.register {
+                username = "fulan"
+                password = "password"
+                confirmPassword = "password"
                 roles = mutableSetOf("WHATEVER")
-            )
-
-            userService.register(payload)
+            }
         }
     }
 
@@ -142,94 +140,78 @@ class UserServiceImplTest(
         assertNotNull(userRepository.findByUsername(user.username))
 
         assertThrows<EntityExistsException> {
-            val payload = RegisterUserDto(
-                username = "fulan",
-                email = "fulan@email.com",
-                password = "password",
+            userService.register {
+                username = "fulan"
+                email = "fulan@email.com"
+                password = "password"
                 confirmPassword = "password"
-            )
-
-            userService.register(payload)
+            }
         }
     }
 
     @Test
     fun `should not register user because invalid payload`() {
         assertThrows<ConstraintViolationException> {
-            val payload = RegisterUserDto(
-                username = "",
-                email = "fulan@email.com",
-                password = "password",
+            userService.register {
+                username = ""
+                email = "fulan@email.com"
+                password = "password"
                 confirmPassword = "password"
-            )
-
-            userService.register(payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = RegisterUserDto(
-                username = "hi",
-                email = "fulan@email.com",
-                password = "password",
+            userService.register {
+                username = "hi"
+                email = "fulan@email.com"
+                password = "password"
                 confirmPassword = "password"
-            )
-
-            userService.register(payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = RegisterUserDto(
-                username = "fulan",
-                email = "",
-                password = "password",
+            userService.register {
+                username = "fulan"
+                email = ""
+                password = "password"
                 confirmPassword = "password"
-            )
-
-            userService.register(payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = RegisterUserDto(
-                username = "fulan",
-                email = "fulan@email.com",
-                password = "",
+            userService.register {
+                username = "fulan"
+                email = "fulan@email.com"
+                password = ""
                 confirmPassword = "password"
-            )
-
-            userService.register(payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = RegisterUserDto(
-                username = "fulan",
-                email = "fulan@email.com",
-                password = "password",
+            userService.register {
+                username = "fulan"
+                email = "fulan@email.com"
+                password = "password"
                 confirmPassword = ""
-            )
-
-            userService.register(payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = RegisterUserDto(
-                username = "fulan",
-                email = "fulan@email.com",
-                password = "pwd",
+            userService.register {
+                username = "fulan"
+                email = "fulan@email.com"
+                password = "pwd"
                 confirmPassword = "pwd"
-            )
-
-            userService.register(payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = RegisterUserDto(
-                username = "fulan",
-                email = "fulan@email.com",
-                password = "password",
+            userService.register {
+                username = "fulan"
+                email = "fulan@email.com"
+                password = "password"
                 confirmPassword = "wrong_password"
-            )
-
-            userService.register(payload)
+            }
         }
     }
 
@@ -237,30 +219,36 @@ class UserServiceImplTest(
     fun `should returns list of user`() {
         assertEquals(0, userService.findAll().size)
 
-        userRepository.save(User(
-            id = UUID.randomUUID(),
-            username = "wahid",
-            email = null,
-            password = passwordEncoder.encode("password")
-        ))
+        userRepository.save(
+            User(
+                id = UUID.randomUUID(),
+                username = "wahid",
+                email = null,
+                password = passwordEncoder.encode("password")
+            )
+        )
 
         assertEquals(1, userService.findAll().size)
 
-        userRepository.save(User(
-            id = UUID.randomUUID(),
-            username = "isnaini",
-            email = null,
-            password = passwordEncoder.encode("password")
-        ))
+        userRepository.save(
+            User(
+                id = UUID.randomUUID(),
+                username = "isnaini",
+                email = null,
+                password = passwordEncoder.encode("password")
+            )
+        )
 
-        userRepository.save(User(
-            id = UUID.randomUUID(),
-            username = "salasa",
-            email = null,
-            password = passwordEncoder.encode("password")
-        ))
+        userRepository.save(
+            User(
+                id = UUID.randomUUID(),
+                username = "salasa",
+                email = null,
+                password = passwordEncoder.encode("password")
+            )
+        )
 
-        val  result = userService.findAll()
+        val result = userService.findAll()
         assertEquals(3, result.size)
         assertEquals("isnaini", result[0].username)
         assertEquals("salasa", result[1].username)

@@ -30,6 +30,7 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.reactivestreams:reactive-streams:1.0.4")
+	implementation("com.google.code.gson:gson:2.10.1")
 	runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.1")
 	implementation("io.github.crackthecodeabhi:kreds:0.8")
 	compileOnly("org.projectlombok:lombok")

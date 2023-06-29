@@ -10,28 +10,28 @@ import jakarta.validation.constraints.NotBlank
 
 data class CreateZakatApplicantDto(
     @field:NotBlank(message = "Institution name is required")
-    val institutionName: String,
+    var institutionName: String = "",
 
     @field:Nullable
     @field:NotBlankOrNull(message = "Institution address cant be empty")
-    val institutionAddress: String?,
+    var institutionAddress: String? = "",
 
     @field:Min(value = 0, message = "Received time cannot be less than January 1, 1970")
-    val receivedTime: Long,
+    var receivedTime: Long = 0,
 
     @field:Nullable
     @field:MinLongOrNull(value = 0, message = "Given time cannot be less than January 1, 1970")
-    val givenTime: Long? = null,
+    var givenTime: Long? = null,
 
     @field:Nullable
     @field:MinDoubleOrNull(value = 1.0, message = "Minimum amount is 1.0")
-    val givenAmount: Double? = null
+    var givenAmount: Double? = null
 ) {
 
     @AssertTrue(message = "Given time cannot be less than or equal to received time")
     fun isGivenTimeGreaterThanReceivedTime(): Boolean {
         if (givenTime != null) {
-            return givenTime > receivedTime
+            return givenTime!! > receivedTime
         }
 
         return true

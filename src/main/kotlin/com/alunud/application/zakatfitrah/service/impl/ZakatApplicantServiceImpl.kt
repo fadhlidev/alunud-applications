@@ -51,6 +51,12 @@ class ZakatApplicantServiceImpl(
         return applicant.response()
     }
 
+    override fun create(year: Int, block: CreateZakatApplicantDto.() -> Unit): ZakatApplicantResponse {
+        val dto = CreateZakatApplicantDto().apply(block)
+        validators.validate(dto)
+        return create(year, dto)
+    }
+
     @Validate
     override fun update(year: Int, id: UUID, dto: UpdateZakatApplicantDto): ZakatApplicantResponse {
         val zakat = zakatEditionRepository.findByYear(year)
@@ -75,6 +81,12 @@ class ZakatApplicantServiceImpl(
 
         zakatApplicantRepository.save(applicant)
         return applicant.response()
+    }
+
+    override fun update(year: Int, id: UUID, block: UpdateZakatApplicantDto.() -> Unit): ZakatApplicantResponse {
+        val dto = UpdateZakatApplicantDto().apply(block)
+        validators.validate(dto)
+        return update(year, id, dto)
     }
 
     override fun delete(year: Int, id: UUID) {

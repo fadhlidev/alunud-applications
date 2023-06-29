@@ -7,7 +7,6 @@ import com.alunud.application.zakatfitrah.repository.ZakatEditionRepository
 import com.alunud.application.zakatfitrah.repository.ZakatPayerRepository
 import com.alunud.application.zakatfitrah.repository.ZakatRecipientRepository
 import com.alunud.application.zakatfitrah.response.ZakatEditionResponse
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -53,46 +52,37 @@ class ZakatFitrahIntegrationTest(
 
     @Test
     fun `should add applicants into zakat edition`() {
-        zakatApplicantService.create(
-            zakat.year,
-            CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren A",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681801200000
-            )
-        )
+        zakatApplicantService.create(zakat.year) {
+            institutionName = "Pondok Pesantren A"
+            institutionAddress = "Tawangsari"
+            receivedTime = 1681801200000
+        }
 
         zakatEditionService.findOne(zakat.year).run {
             assertEquals(1, this.report.recipient.totalApplicationProposals)
             assertEquals(0.0, this.report.zakat.totalGivenToApplicants)
         }
 
-        zakatApplicantService.create(
-            zakat.year,
-            CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren B",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681804800000,
-                givenTime = 1681808400000,
-                givenAmount = 25.0
-            )
-        )
+        zakatApplicantService.create(zakat.year) {
+            institutionName = "Pondok Pesantren B"
+            institutionAddress = "Tawangsari"
+            receivedTime = 1681804800000
+            givenTime = 1681808400000
+            givenAmount = 25.0
+        }
 
         zakatEditionService.findOne(zakat.year).run {
             assertEquals(2, this.report.recipient.totalApplicationProposals)
             assertEquals(25.0, this.report.zakat.totalGivenToApplicants)
         }
 
-        zakatApplicantService.create(
-            zakat.year,
-            CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren C",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681808400000,
-                givenTime = 1681812000000,
-                givenAmount = 50.0
-            )
-        )
+        zakatApplicantService.create(zakat.year) {
+            institutionName = "Pondok Pesantren C"
+            institutionAddress = "Tawangsari"
+            receivedTime = 1681808400000
+            givenTime = 1681812000000
+            givenAmount = 50.0
+        }
 
         zakatEditionService.findOne(zakat.year).run {
             assertEquals(3, this.report.recipient.totalApplicationProposals)
@@ -102,28 +92,21 @@ class ZakatFitrahIntegrationTest(
 
     @Test
     fun `should update applicants of zakat edition`() {
-        val applicant = zakatApplicantService.create(
-            zakat.year,
-            CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren A",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681801200000
-            )
-        )
+        val applicant = zakatApplicantService.create(zakat.year) {
+            institutionName = "Pondok Pesantren A"
+            institutionAddress = "Tawangsari"
+            receivedTime = 1681801200000
+        }
 
         zakatEditionService.findOne(zakat.year).run {
             assertEquals(1, this.report.recipient.totalApplicationProposals)
             assertEquals(0.0, this.report.zakat.totalGivenToApplicants)
         }
 
-        zakatApplicantService.update(
-            zakat.year,
-            applicant.id,
-            UpdateZakatApplicantDto(
-                givenTime = 1681808400000,
-                givenAmount = 25.0
-            )
-        )
+        zakatApplicantService.update(zakat.year, applicant.id) {
+            givenTime = 1681808400000
+            givenAmount = 25.0
+        }
 
         zakatEditionService.findOne(zakat.year).run {
             assertEquals(1, this.report.recipient.totalApplicationProposals)
@@ -133,49 +116,42 @@ class ZakatFitrahIntegrationTest(
 
     @Test
     fun `should remove applicants from zakat edition`() {
-        zakatApplicantService.create(
-            zakat.year,
-            CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren A",
-                institutionAddress = "Tawangsari",
+        run {
+            val applicant = zakatApplicantService.create(zakat.year) {
+                institutionName = "Pondok Pesantren A"
+                institutionAddress = "Tawangsari"
                 receivedTime = 1681801200000
-            )
-        ).run {
-            zakatApplicantService.delete(zakat.year, this.id)
-
-            zakatEditionService.findOne(zakat.year).run {
-                assertEquals(0, this.report.recipient.totalApplicationProposals)
-                assertEquals(0.0, this.report.zakat.totalGivenToApplicants)
             }
+
+            zakatApplicantService.delete(zakat.year, applicant.id)
+
+            val edition = zakatEditionService.findOne(zakat.year)
+            assertEquals(0, edition.report.recipient.totalApplicationProposals)
+            assertEquals(0.0, edition.report.zakat.totalGivenToApplicants)
         }
 
-        zakatApplicantService.create(
-            zakat.year,
-            CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren B",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681804800000,
-                givenTime = 1681808400000,
-                givenAmount = 25.0
-            )
-        )
+        zakatApplicantService.create(zakat.year) {
+            institutionName = "Pondok Pesantren B"
+            institutionAddress = "Tawangsari"
+            receivedTime = 1681804800000
+            givenTime = 1681808400000
+            givenAmount = 25.0
+        }
 
-        zakatApplicantService.create(
-            zakat.year,
-            CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren C",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681808400000,
-                givenTime = 1681812000000,
+        run {
+            val applicant = zakatApplicantService.create(zakat.year) {
+                institutionName = "Pondok Pesantren C"
+                institutionAddress = "Tawangsari"
+                receivedTime = 1681808400000
+                givenTime = 1681812000000
                 givenAmount = 50.0
-            )
-        ).run {
-            zakatApplicantService.delete(zakat.year, this.id)
-
-            zakatEditionService.findOne(zakat.year).run {
-                assertEquals(1, this.report.recipient.totalApplicationProposals)
-                assertEquals(25.0, this.report.zakat.totalGivenToApplicants)
             }
+
+            zakatApplicantService.delete(zakat.year, applicant.id)
+
+            val edition = zakatEditionService.findOne(zakat.year)
+            assertEquals(1, edition.report.recipient.totalApplicationProposals)
+            assertEquals(25.0, edition.report.zakat.totalGivenToApplicants)
         }
     }
 
@@ -476,24 +452,20 @@ class ZakatFitrahIntegrationTest(
             assertEquals(62.0, report.zakat.totalRemaining)
         }
 
-        zakatApplicantService.create(
-            zakat.year, CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren A",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681804800000,
-                givenAmount = 25.0,
-                givenTime = 1681808400000
-            )
-        )
+        zakatApplicantService.create(zakat.year) {
+            institutionName = "Pondok Pesantren A"
+            institutionAddress = "Tawangsari"
+            receivedTime = 1681804800000
+            givenAmount = 25.0
+            givenTime = 1681808400000
+        }
 
-        zakatApplicantService.create(
-            zakat.year, CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren B",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681808400000,
-                givenAmount = 25.0
-            )
-        )
+        zakatApplicantService.create(zakat.year) {
+            institutionName = "Pondok Pesantren B"
+            institutionAddress = "Tawangsari"
+            receivedTime = 1681808400000
+            givenAmount = 25.0
+        }
 
         zakatEditionService.findOne(zakat.year).run {
             assertEquals(7, report.payer.totalRepresentation)

@@ -80,105 +80,89 @@ class ZakatApplicantServiceImplTest(
     @Test
     fun `should not create zakat fitrah applicant because receivedTime is earlier that startDate edition`() {
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren A",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681542000000,
-                givenTime = null,
+            zakatApplicantService.create(zakat.year) {
+                institutionName = "Pondok Pesantren A"
+                institutionAddress = "Tawangsari"
+                receivedTime = 1681542000000
+                givenTime = null
                 givenAmount = null
-            )
-
-            zakatApplicantService.create(zakat.year, payload)
+            }
         }
     }
 
     @Test
     fun `should not create zakat fitrah applicant because invalid payload`() {
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatApplicantDto(
-                institutionName = "",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681542000000,
-                givenTime = null,
+            zakatApplicantService.create(zakat.year) {
+                institutionName = ""
+                institutionAddress = "Tawangsari"
+                receivedTime = 1681542000000
+                givenTime = null
                 givenAmount = null
-            )
-
-            zakatApplicantService.create(zakat.year, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren A",
-                institutionAddress = "",
-                receivedTime = 1681542000000,
-                givenTime = null,
+            zakatApplicantService.create(zakat.year) {
+                institutionName = "Pondok Pesantren A"
+                institutionAddress = ""
+                receivedTime = 1681542000000
+                givenTime = null
                 givenAmount = null
-            )
-
-            zakatApplicantService.create(zakat.year, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren A",
-                institutionAddress = "Tawangsari",
-                receivedTime = -1,
-                givenTime = null,
+            zakatApplicantService.create(zakat.year) {
+                institutionName = "Pondok Pesantren A"
+                institutionAddress = "Tawangsari"
+                receivedTime = -1
+                givenTime = null
                 givenAmount = null
-            )
-
-            zakatApplicantService.create(zakat.year, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren A",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681542000000,
-                givenTime = -1,
+            zakatApplicantService.create(zakat.year) {
+                institutionName = "Pondok Pesantren A"
+                institutionAddress = "Tawangsari"
+                receivedTime = 1681542000000
+                givenTime = -1
                 givenAmount = null
-            )
-
-            zakatApplicantService.create(zakat.year, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren A",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681542000000,
-                givenTime = 1681538400000,
+            zakatApplicantService.create(zakat.year) {
+                institutionName = "Pondok Pesantren A"
+                institutionAddress = "Tawangsari"
+                receivedTime = 1681542000000
+                givenTime = 1681538400000
                 givenAmount = null
-            )
-
-            zakatApplicantService.create(zakat.year, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren A",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681542000000,
-                givenTime = null,
+            zakatApplicantService.create(zakat.year) {
+                institutionName = "Pondok Pesantren A"
+                institutionAddress = "Tawangsari"
+                receivedTime = 1681542000000
+                givenTime = null
                 givenAmount = 0.0
-            )
-
-            zakatApplicantService.create(zakat.year, payload)
+            }
         }
     }
 
     @Test
     fun `should not create zakat fitrah applicant because edition doesnt exists`() {
         assertThrows<NotFoundException> {
-            val payload = CreateZakatApplicantDto(
-                institutionName = "Pondok Pesantren A",
-                institutionAddress = "Tawangsari",
-                receivedTime = 1681801200000,
-                givenTime = null,
+            zakatApplicantService.create(2022) {
+                institutionName = "Pondok Pesantren A"
+                institutionAddress = "Tawangsari"
+                receivedTime = 1681801200000
+                givenTime = null
                 givenAmount = null
-            )
-
-            zakatApplicantService.create(2022, payload)
+            }
         }
     }
 
@@ -230,15 +214,13 @@ class ZakatApplicantServiceImplTest(
         zakatApplicantRepository.save(applicant)
 
         assertThrows<ConstraintViolationException> {
-            val payload = UpdateZakatApplicantDto(
-                institutionName = "Pondok Pesantren B",
-                institutionAddress = "Sukoharjo",
-                receivedTime = 1681542000000,
-                givenTime = null,
+            zakatApplicantService.update(zakat.year, applicant.id) {
+                institutionName = "Pondok Pesantren B"
+                institutionAddress = "Sukoharjo"
+                receivedTime = 1681542000000
+                givenTime = null
                 givenAmount = null
-            )
-
-            zakatApplicantService.update(zakat.year, applicant.id, payload)
+            }
         }
     }
 
@@ -257,63 +239,53 @@ class ZakatApplicantServiceImplTest(
         zakatApplicantRepository.save(applicant)
 
         assertThrows<ConstraintViolationException> {
-            val payload = UpdateZakatApplicantDto(
-                institutionName = "",
-                institutionAddress = "Sukoharjo",
-                receivedTime = 1681804800000,
-                givenTime = 1681808400000,
+            zakatApplicantService.update(zakat.year, applicant.id) {
+                institutionName = ""
+                institutionAddress = "Sukoharjo"
+                receivedTime = 1681804800000
+                givenTime = 1681808400000
                 givenAmount = 25.0
-            )
-
-            zakatApplicantService.update(zakat.year, applicant.id, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = UpdateZakatApplicantDto(
-                institutionName = "Pondok Pesantren B",
-                institutionAddress = "",
-                receivedTime = 1681804800000,
-                givenTime = 1681808400000,
+            zakatApplicantService.update(zakat.year, applicant.id) {
+                institutionName = "Pondok Pesantren B"
+                institutionAddress = ""
+                receivedTime = 1681804800000
+                givenTime = 1681808400000
                 givenAmount = 25.0
-            )
-
-            zakatApplicantService.update(zakat.year, applicant.id, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = UpdateZakatApplicantDto(
-                institutionName = "Pondok Pesantren B",
-                institutionAddress = "Sukoharjo",
-                receivedTime = -1,
-                givenTime = null,
+            zakatApplicantService.update(zakat.year, applicant.id) {
+                institutionName = "Pondok Pesantren B"
+                institutionAddress = "Sukoharjo"
+                receivedTime = -1
+                givenTime = null
                 givenAmount = null
-            )
-
-            zakatApplicantService.update(zakat.year, applicant.id, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = UpdateZakatApplicantDto(
-                institutionName = "Pondok Pesantren B",
-                institutionAddress = "Sukoharjo",
-                receivedTime = 1681808400000,
-                givenTime = 1681804800000,
+            zakatApplicantService.update(zakat.year, applicant.id) {
+                institutionName = "Pondok Pesantren B"
+                institutionAddress = "Sukoharjo"
+                receivedTime = 1681808400000
+                givenTime = 1681804800000
                 givenAmount = 25.0
-            )
-
-            zakatApplicantService.update(zakat.year, applicant.id, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = UpdateZakatApplicantDto(
-                institutionName = "Pondok Pesantren B",
-                institutionAddress = "Sukoharjo",
-                receivedTime = 1681804800000,
-                givenTime = 1681808400000,
+            zakatApplicantService.update(zakat.year, applicant.id) {
+                institutionName = "Pondok Pesantren B"
+                institutionAddress = "Sukoharjo"
+                receivedTime = 1681804800000
+                givenTime = 1681808400000
                 givenAmount = 0.0
-            )
-
-            zakatApplicantService.update(zakat.year, applicant.id, payload)
+            }
         }
     }
 
@@ -332,30 +304,26 @@ class ZakatApplicantServiceImplTest(
         zakatApplicantRepository.save(applicant)
 
         assertThrows<NotFoundException> {
-            val payload = UpdateZakatApplicantDto(
-            institutionName = "Pondok Pesantren B",
-            institutionAddress = "Sukoharjo",
-            receivedTime = 1681804800000,
-            givenTime = 1681808400000,
-            givenAmount = 25.0
-        )
-
-            zakatApplicantService.update(2022, applicant.id, payload)
+            zakatApplicantService.update(2022, applicant.id) {
+                institutionName = "Pondok Pesantren B"
+                institutionAddress = "Sukoharjo"
+                receivedTime = 1681804800000
+                givenTime = 1681808400000
+                givenAmount = 25.0
+            }
         }
     }
 
     @Test
     fun `should not update zakat fitrah applicant because applicant doesnt exists`() {
         assertThrows<NotFoundException> {
-            val payload = UpdateZakatApplicantDto(
-                institutionName = "Pondok Pesantren B",
-                institutionAddress = "Sukoharjo",
-                receivedTime = 1681804800000,
-                givenTime = 1681808400000,
+            zakatApplicantService.update(zakat.year, UUID.randomUUID()) {
+                institutionName = "Pondok Pesantren B"
+                institutionAddress = "Sukoharjo"
+                receivedTime = 1681804800000
+                givenTime = 1681808400000
                 givenAmount = 25.0
-            )
-
-            zakatApplicantService.update(zakat.year, UUID.randomUUID(), payload)
+            }
         }
     }
 

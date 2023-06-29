@@ -180,16 +180,13 @@ class ZakatFitrahIntegrationTest(
 
     @Test
     fun `should add payers into zakat edition`() {
-        zakatPayerService.create(
-            zakat.year,
-            CreateZakatPayerDto(
-                name = "Wahid",
-                address = "Pojok 2/3",
-                totalPeople = 1,
-                totalAmount = 3.0,
-                excessAmountReturned = true
-            )
-        )
+        zakatPayerService.create(zakat.year) {
+            name = "Wahid"
+            address = "Pojok 2/3"
+            totalPeople = 1
+            totalAmount = 3.0
+            excessAmountReturned = true
+        }
 
         zakatEditionService.findOne(zakat.year).run {
             assertEquals(1, this.report.payer.totalRepresentation)
@@ -198,16 +195,13 @@ class ZakatFitrahIntegrationTest(
             assertEquals(0.0, this.report.zakat.totalExcessAmount)
         }
 
-        zakatPayerService.create(
-            zakat.year,
-            CreateZakatPayerDto(
-                name = "Isnaini",
-                address = "Pojok 2/3",
-                totalPeople = 2,
-                totalAmount = 5.0,
-                excessAmountReturned = true
-            )
-        )
+        zakatPayerService.create(zakat.year) {
+            name = "Isnaini"
+            address = "Pojok 2/3"
+            totalPeople = 2
+            totalAmount = 5.0
+            excessAmountReturned = true
+        }
 
         zakatEditionService.findOne(zakat.year).run {
             assertEquals(2, this.report.payer.totalRepresentation)
@@ -216,16 +210,13 @@ class ZakatFitrahIntegrationTest(
             assertEquals(0.0, this.report.zakat.totalExcessAmount)
         }
 
-        zakatPayerService.create(
-            zakat.year,
-            CreateZakatPayerDto(
-                name = "Salasa",
-                address = "Pojok 2/3",
-                totalPeople = 4,
-                totalAmount = 11.0,
-                excessAmountReturned = false
-            )
-        )
+        zakatPayerService.create(zakat.year) {
+            name = "Salasa"
+            address = "Pojok 2/3"
+            totalPeople = 4
+            totalAmount = 11.0
+            excessAmountReturned = false
+        }
 
         zakatEditionService.findOne(zakat.year).run {
             assertEquals(3, this.report.payer.totalRepresentation)
@@ -237,16 +228,13 @@ class ZakatFitrahIntegrationTest(
 
     @Test
     fun `should update payers of zakat edition`() {
-        val payer = zakatPayerService.create(
-            zakat.year,
-            CreateZakatPayerDto(
-                name = "Isnaini",
-                address = "Pojok 2/3",
-                totalPeople = 2,
-                totalAmount = 5.0,
-                excessAmountReturned = true
-            )
-        )
+        val payer = zakatPayerService.create(zakat.year) {
+            name = "Isnaini"
+            address = "Pojok 2/3"
+            totalPeople = 2
+            totalAmount = 5.0
+            excessAmountReturned = true
+        }
 
         zakatEditionService.findOne(zakat.year).run {
             assertEquals(1, this.report.payer.totalRepresentation)
@@ -255,13 +243,11 @@ class ZakatFitrahIntegrationTest(
             assertEquals(0.0, this.report.zakat.totalExcessAmount)
         }
 
-        zakatPayerService.update(
-            zakat.year, payer.id, UpdateZakatPayerDto(
-                totalPeople = 3,
-                totalAmount = 8.5,
-                excessAmountReturned = false
-            )
-        )
+        zakatPayerService.update(zakat.year, payer.id) {
+            totalPeople = 3
+            totalAmount = 8.5
+            excessAmountReturned = false
+        }
 
         zakatEditionService.findOne(zakat.year).run {
             assertEquals(1, this.report.payer.totalRepresentation)
@@ -274,16 +260,13 @@ class ZakatFitrahIntegrationTest(
     @Test
     fun `should remove payers into zakat edition`() {
         val currentZakat = zakat
-        zakatPayerService.create(
-            zakat.year,
-            CreateZakatPayerDto(
-                name = "Wahid",
-                address = "Pojok 2/3",
-                totalPeople = 1,
-                totalAmount = 3.0,
-                excessAmountReturned = true
-            )
-        ).run {
+        zakatPayerService.create(zakat.year) {
+            name = "Wahid"
+            address = "Pojok 2/3"
+            totalPeople = 1
+            totalAmount = 3.0
+            excessAmountReturned = true
+        }.run {
             zakatPayerService.delete(currentZakat.year, id)
 
             zakatEditionService.findOne(currentZakat.year).run {
@@ -294,27 +277,21 @@ class ZakatFitrahIntegrationTest(
             }
         }
 
-        zakatPayerService.create(
-            zakat.year,
-            CreateZakatPayerDto(
-                name = "Isnaini",
-                address = "Pojok 2/3",
-                totalPeople = 2,
-                totalAmount = 5.0,
-                excessAmountReturned = true
-            )
-        )
+        zakatPayerService.create(zakat.year) {
+            name = "Isnaini"
+            address = "Pojok 2/3"
+            totalPeople = 2
+            totalAmount = 5.0
+            excessAmountReturned = true
+        }
 
-        zakatPayerService.create(
-            zakat.year,
-            CreateZakatPayerDto(
-                name = "Salasa",
-                address = "Pojok 2/3",
-                totalPeople = 4,
-                totalAmount = 11.0,
-                excessAmountReturned = false
-            )
-        ).run {
+        zakatPayerService.create(zakat.year) {
+            name = "Salasa"
+            address = "Pojok 2/3"
+            totalPeople = 4
+            totalAmount = 11.0
+            excessAmountReturned = false
+        }.run {
             zakatPayerService.delete(currentZakat.year, id)
 
             zakatEditionService.findOne(currentZakat.year).run {

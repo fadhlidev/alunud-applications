@@ -8,7 +8,9 @@ import java.util.*
 
 interface ZakatPayerService {
     fun create(year: Int, dto: CreateZakatPayerDto): ZakatPayerResponse
+    fun create(year: Int, block: CreateZakatPayerDto.() -> Unit): ZakatPayerResponse
     fun update(year: Int, id: UUID, dto: UpdateZakatPayerDto): ZakatPayerResponse
+    fun update(year: Int, id: UUID, block: UpdateZakatPayerDto.() -> Unit): ZakatPayerResponse
     fun delete(year: Int, id: UUID)
     fun findAll(year: Int): List<ZakatPayerSimpleResponse>
     fun findOne(year: Int, id: UUID): ZakatPayerResponse

@@ -92,81 +92,69 @@ class ZakatPayerServiceImplTest(
         zakatEditionRepository.save(zakat)
 
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatPayerDto(
-                name = "Fulan",
-                address = "Pojok 2/3",
-                totalPeople = 4,
-                totalAmount = 11.0,
+            zakatPayerService.create(zakat.year) {
+                name = "Fulan"
+                address = "Pojok 2/3"
+                totalPeople = 4
+                totalAmount = 11.0
                 excessAmountReturned = true
-            )
-
-            zakatPayerService.create(zakat.year, payload)
+            }
         }
     }
 
     @Test
     fun `should not create zakat fitrah payer because invalid payload`() {
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatPayerDto(
-                name = "",
-                address = null,
-                totalPeople = 4,
-                totalAmount = 11.0,
+            zakatPayerService.create(zakat.year) {
+                name = ""
+                address = null
+                totalPeople = 4
+                totalAmount = 11.0
                 excessAmountReturned = true
-            )
-
-            zakatPayerService.create(zakat.year, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatPayerDto(
-                name = "Fulan",
-                address = "",
-                totalPeople = 4,
-                totalAmount = 11.0,
+            zakatPayerService.create(zakat.year) {
+                name = "Fulan"
+                address = ""
+                totalPeople = 4
+                totalAmount = 11.0
                 excessAmountReturned = true
-            )
-
-            zakatPayerService.create(zakat.year, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatPayerDto(
-                name = "Fulan",
-                address = null,
-                totalPeople = 0,
-                totalAmount = 11.0,
+            zakatPayerService.create(zakat.year) {
+                name = "Fulan"
+                address = null
+                totalPeople = 0
+                totalAmount = 11.0
                 excessAmountReturned = true
-            )
-
-            zakatPayerService.create(zakat.year, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatPayerDto(
-                name = "Fulan",
-                address = null,
-                totalPeople = 4,
-                totalAmount = 0.0,
+            zakatPayerService.create(zakat.year) {
+                name = "Fulan"
+                address = null
+                totalPeople = 4
+                totalAmount = 0.0
                 excessAmountReturned = true
-            )
-
-            zakatPayerService.create(zakat.year, payload)
+            }
         }
     }
 
     @Test
     fun `should not create zakat fitrah payer because edition doesnt exists`() {
         assertThrows<NotFoundException> {
-            val payload = CreateZakatPayerDto(
-                name = "Fulan",
-                address = "Pojok 2/3",
-                totalPeople = 4,
-                totalAmount = 11.0,
+            zakatPayerService.create(2022) {
+                name = "Fulan"
+                address = "Pojok 2/3"
+                totalPeople = 4
+                totalAmount = 11.0
                 excessAmountReturned = true
-            )
-
-            zakatPayerService.create(2022, payload)
+            }
         }
     }
 
@@ -225,81 +213,69 @@ class ZakatPayerServiceImplTest(
         zakatPayerRepository.save(payer)
 
         assertThrows<ConstraintViolationException> {
-            val payload = UpdateZakatPayerDto(
-                name = "",
-                address = "Pojok 2/3",
-                totalPeople = 5,
-                totalAmount = 13.0,
+            zakatPayerService.update(zakat.year, payer.id) {
+                name = ""
+                address = "Pojok 2/3"
+                totalPeople = 5
+                totalAmount = 13.0
                 excessAmountReturned = false
-            )
-
-            zakatPayerService.update(zakat.year, payer.id, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = UpdateZakatPayerDto(
-                name = "Fulanah",
-                address = "",
-                totalPeople = 5,
-                totalAmount = 13.0,
+            zakatPayerService.update(zakat.year, payer.id) {
+                name = "Fulanah"
+                address = ""
+                totalPeople = 5
+                totalAmount = 13.0
                 excessAmountReturned = false
-            )
-
-            zakatPayerService.update(zakat.year, payer.id, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = UpdateZakatPayerDto(
-                name = "Fulanah",
-                address = "Pojok 2/3",
-                totalPeople = 0,
-                totalAmount = 13.0,
+            zakatPayerService.update(zakat.year, payer.id) {
+                name = "Fulanah"
+                address = "Pojok 2/3"
+                totalPeople = 0
+                totalAmount = 13.0
                 excessAmountReturned = false
-            )
-
-            zakatPayerService.update(zakat.year, payer.id, payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = UpdateZakatPayerDto(
-                name = "Fulanah",
-                address = "Pojok 2/3",
-                totalPeople = 5,
-                totalAmount = 0.0,
+            zakatPayerService.update(zakat.year, payer.id) {
+                name = "Fulanah"
+                address = "Pojok 2/3"
+                totalPeople = 5
+                totalAmount = 0.0
                 excessAmountReturned = false
-            )
-
-            zakatPayerService.update(zakat.year, payer.id, payload)
+            }
         }
     }
 
     @Test
     fun `should not update zakat fitrah payer because edition doesnt exists`() {
         assertThrows<NotFoundException> {
-            val payload = UpdateZakatPayerDto(
-                name = "Fulanah",
-                address = "Pojok 2/3",
-                totalPeople = 5,
-                totalAmount = 13.0,
+            zakatPayerService.update(2023, UUID.randomUUID()) {
+                name = "Fulanah"
+                address = "Pojok 2/3"
+                totalPeople = 5
+                totalAmount = 13.0
                 excessAmountReturned = false
-            )
-
-            zakatPayerService.update(2023, UUID.randomUUID(), payload)
+            }
         }
     }
 
     @Test
     fun `should not update zakat fitrah payer because payer doesnt exists`() {
         assertThrows<NotFoundException> {
-            val payload = UpdateZakatPayerDto(
-                name = "Fulanah",
-                address = "Pojok 2/3",
-                totalPeople = 5,
-                totalAmount = 13.0,
+            zakatPayerService.update(zakat.year, UUID.randomUUID()) {
+                name = "Fulanah"
+                address = "Pojok 2/3"
+                totalPeople = 5
+                totalAmount = 13.0
                 excessAmountReturned = false
-            )
-
-            zakatPayerService.update(zakat.year, UUID.randomUUID(), payload)
+            }
         }
     }
 

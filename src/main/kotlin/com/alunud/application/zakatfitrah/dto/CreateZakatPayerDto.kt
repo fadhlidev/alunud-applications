@@ -8,19 +8,19 @@ import jakarta.validation.constraints.NotNull
 
 data class CreateZakatPayerDto(
     @field:NotBlank(message = "Name is required")
-    val name: String,
+    var name: String = "",
 
     @field:Nullable
     @field:NotBlankOrNull(message = "Address cant be empty")
-    val address: String? = null,
+    var address: String? = null,
 
     @field:NotNull(message = "Total people is required")
     @field:Min(value = 1, message = "Minimum number of people is 1")
-    val totalPeople: Int,
+    var totalPeople: Int = 1,
 
     @field:NotNull(message = "Total amount is required")
     @field:Min(value = 1, message = "Minimum amount is 1")
-    val totalAmount: Double,
+    var totalAmount: Double = 1.0,
 
-    val excessAmountReturned: Boolean = false
+    var excessAmountReturned: Boolean = false
 )

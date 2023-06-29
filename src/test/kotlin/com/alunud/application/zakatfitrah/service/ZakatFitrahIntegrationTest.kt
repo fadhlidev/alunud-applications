@@ -33,13 +33,11 @@ class ZakatFitrahIntegrationTest(
 
     @BeforeEach
     fun `create default zakat edition`() {
-        val payload = CreateZakatEditionDto(
-            year = 2023,
-            startDate = 1681578000000,
+        zakat = zakatEditionService.create {
+            year = 2023
+            startDate = 1681578000000
             amountPerPerson = 2.5
-        )
-
-        zakat = zakatEditionService.create(payload)
+        }
     }
 
     @AfterEach

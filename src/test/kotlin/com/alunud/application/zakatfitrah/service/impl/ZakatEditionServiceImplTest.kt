@@ -52,33 +52,27 @@ class ZakatEditionServiceImplTest(
     @Test
     fun `should not create zakat fitrah edition because invalid payload`() {
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatEditionDto(
-                year = 1945,
-                startDate = 1681578000000,
+            zakatEditionService.create {
+                year = 1945
+                startDate = 1681578000000
                 amountPerPerson = 2.5
-            )
-
-            zakatEditionService.create(payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatEditionDto(
-                year = 2023,
-                startDate = -1,
+            zakatEditionService.create {
+                year = 2023
+                startDate = -1
                 amountPerPerson = 2.5
-            )
-
-            zakatEditionService.create(payload)
+            }
         }
 
         assertThrows<ConstraintViolationException> {
-            val payload = CreateZakatEditionDto(
-                year = 2023,
-                startDate = 1681578000000,
+            zakatEditionService.create {
+                year = 2023
+                startDate = 1681578000000
                 amountPerPerson = 2.0
-            )
-
-            zakatEditionService.create(payload)
+            }
         }
     }
 
@@ -95,13 +89,11 @@ class ZakatEditionServiceImplTest(
         zakatEditionRepository.save(zakat)
 
         assertThrows<EntityExistsException> {
-            val payload = CreateZakatEditionDto(
-                year = 2023,
-                startDate = 1681578000000,
+            zakatEditionService.create {
+                year = 2023
+                startDate = 1681578000000
                 amountPerPerson = 2.5
-            )
-
-            zakatEditionService.create(payload)
+            }
         }
     }
 
@@ -203,12 +195,10 @@ class ZakatEditionServiceImplTest(
 
         zakatEditionRepository.save(zakat)
 
-        val payload = UpdateZakatEditionDto(
-            startDate = null,
+        val result = zakatEditionService.update(zakat.year) {
+            startDate = null
             endDate = null
-        )
-
-        val result = zakatEditionService.update(zakat.year, payload)
+        }
 
         assertNotNull(result)
 
@@ -231,12 +221,10 @@ class ZakatEditionServiceImplTest(
         zakatEditionRepository.save(zakat)
 
         assertThrows<ConstraintViolationException> {
-            val payload = UpdateZakatEditionDto(
-                startDate = null,
+            zakatEditionService.update(zakat.year) {
+                startDate = null
                 endDate = 1681491600000
-            )
-
-            zakatEditionService.update(zakat.year, payload)
+            }
         }
     }
 
@@ -253,24 +241,20 @@ class ZakatEditionServiceImplTest(
         zakatEditionRepository.save(zakat)
 
         assertThrows<ConstraintViolationException> {
-            val payload = UpdateZakatEditionDto(
-                startDate = 1681578000000,
+            zakatEditionService.update(2023) {
+                startDate = 1681578000000
                 endDate = 1681491600000
-            )
-
-            zakatEditionService.update(2023, payload)
+            }
         }
     }
 
     @Test
     fun `should throw error not found update zakat fitrah edition`() {
         assertThrows<NotFoundException> {
-            val payload = UpdateZakatEditionDto(
-                startDate = null,
+            zakatEditionService.update(2023) {
+                startDate = null
                 endDate = null
-            )
-
-            zakatEditionService.update(2023, payload)
+            }
         }
     }
 

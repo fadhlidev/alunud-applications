@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
-@RestControllerAdvice(basePackages = ["com.alunud.application.auth.controller"])
+@RestControllerAdvice(basePackageClasses = [AuthController::class])
 class AuthControllerAdvice {
 
     @ExceptionHandler(value = [HttpMessageNotReadableException::class])

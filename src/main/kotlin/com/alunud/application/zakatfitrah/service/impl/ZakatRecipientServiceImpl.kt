@@ -49,6 +49,12 @@ class ZakatRecipientServiceImpl(
         return recipient.response()
     }
 
+    override fun create(year: Int, block: CreateZakatRecipientDto.() -> Unit): ZakatRecipientResponse {
+        val dto = CreateZakatRecipientDto().apply(block)
+        validators.validate(dto)
+        return create(year, dto)
+    }
+
     @Validate
     override fun update(year: Int, id: UUID, dto: UpdateZakatRecipientDto): ZakatRecipientResponse {
         val zakat = zakatEditionRepository.findByYear(year)
@@ -68,6 +74,12 @@ class ZakatRecipientServiceImpl(
 
         zakatRecipientRepository.save(recipient)
         return recipient.response()
+    }
+
+    override fun update(year: Int, id: UUID, block: UpdateZakatRecipientDto.() -> Unit): ZakatRecipientResponse {
+        val dto = UpdateZakatRecipientDto().apply(block)
+        validators.validate(dto)
+        return update(year, id, dto)
     }
 
     override fun delete(year: Int, id: UUID) {
@@ -104,7 +116,7 @@ class ZakatRecipientServiceImpl(
             }
         }
 
-        edition.endDate?.let {  endDate ->
+        edition.endDate?.let { endDate ->
             givenTime?.let { givenTime ->
                 validators.invalid("Given time cannot be later than the end date edition") {
                     givenTime > endDate

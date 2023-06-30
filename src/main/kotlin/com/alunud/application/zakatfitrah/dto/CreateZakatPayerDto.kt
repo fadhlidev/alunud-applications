@@ -16,11 +16,11 @@ data class CreateZakatPayerDto(
 
     @field:NotNull(message = "Total people is required")
     @field:Min(value = 1, message = "Minimum number of people is 1")
-    var totalPeople: Int = 1,
+    var totalPeople: Int = 0,
 
     @field:NotNull(message = "Total amount is required")
     @field:Min(value = 1, message = "Minimum amount is 1")
-    var totalAmount: Double = 1.0,
+    var totalAmount: Double = 0.0,
 
     var excessAmountReturned: Boolean = false
 )

@@ -17,7 +17,7 @@ data class CreateZakatApplicantDto(
     var institutionAddress: String? = "",
 
     @field:Min(value = 0, message = "Received time cannot be less than January 1, 1970")
-    var receivedTime: Long = 0,
+    var receivedTime: Long = -1,
 
     @field:Nullable
     @field:MinLongOrNull(value = 0, message = "Given time cannot be less than January 1, 1970")

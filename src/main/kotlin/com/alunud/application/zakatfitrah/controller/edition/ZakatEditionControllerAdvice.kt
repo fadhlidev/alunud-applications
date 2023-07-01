@@ -11,9 +11,23 @@ import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 
 @RestControllerAdvice(basePackageClasses = [ZakatEditionController::class])
 class ZakatEditionControllerAdvice {
+
+    @ExceptionHandler(value = [MethodArgumentTypeMismatchException::class])
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun methodArgumentTypeMismatchExceptionExceptionHandler(
+        exception: MethodArgumentTypeMismatchException,
+        request: HttpServletRequest
+    ): JsonResponse {
+        return JsonResponse(
+            status = HttpStatus.BAD_REQUEST.value(),
+            message = getMessageFromMethod(request.requestURI),
+            error = "Invalid type argument parameter"
+        )
+    }
 
     @ExceptionHandler(value = [HttpMessageNotReadableException::class])
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -54,7 +54,11 @@ class ZakatPayerController(@Autowired private val zakatPayerService: ZakatPayerS
     @PutMapping("/{payerId}")
     @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.OK)
-    fun update(@PathVariable year: Int, @PathVariable payerId: UUID, @RequestBody dto: UpdateZakatPayerDto): JsonResponse {
+    fun update(
+        @PathVariable year: Int,
+        @PathVariable payerId: UUID,
+        @RequestBody dto: UpdateZakatPayerDto
+    ): JsonResponse {
         val result = zakatPayerService.update(year, payerId, dto)
 
         return JsonResponse(

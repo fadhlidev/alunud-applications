@@ -64,7 +64,7 @@ class ZakatEditionControllerAdvice {
     private fun getMessageFromMethod(method: String): String {
         return when (method) {
             HttpMethod.POST.name() -> "FAILED_CREATE_ZAKAT_FITRAH_EDITION"
-            HttpMethod.DELETE.name() -> "FAILED_UPDATE_ZAKAT_FITRAH_EDITION"
+            HttpMethod.PUT.name() -> "FAILED_UPDATE_ZAKAT_FITRAH_EDITION"
             else -> "FAILED_DELETE_ZAKAT_FITRAH_EDITION"
         }
     }

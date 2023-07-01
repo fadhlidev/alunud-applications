@@ -12,7 +12,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("/api/zakatfitrah/{year}/applicants")
-class ZakatApplicationController(@Autowired private val zakatApplicantService: ZakatApplicantService) {
+class ZakatApplicantController(@Autowired private val zakatApplicantService: ZakatApplicantService) {
 
     @PostMapping
     @Secured("ROLE_ADMIN")

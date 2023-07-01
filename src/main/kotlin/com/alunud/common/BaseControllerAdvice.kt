@@ -1,4 +1,4 @@
-package com.alunud.application.zakatfitrah.controller.applicant
+package com.alunud.common
 
 import com.alunud.exception.EntityExistsException
 import com.alunud.exception.NotFoundException
@@ -10,11 +10,14 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 
-@RestControllerAdvice(basePackageClasses = [ZakatApplicationController::class])
-class ZakatApplicationControllerAdvice {
+open class BaseControllerAdvice(
+    private val createError: String = "FAILED_TO_CREATE_ENTITY",
+    private val readError: String = "FAILED_TO_GET_ENTITY",
+    private val updateError: String = "FAILED_TO_UPDATE_ENTITY",
+    private val deleteError: String = "FAILED_TO_DELETE_ENTITY"
+) {
 
     @ExceptionHandler(value = [MethodArgumentTypeMismatchException::class])
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -60,26 +63,30 @@ class ZakatApplicationControllerAdvice {
     fun entityExistsExceptionHandler(exception: EntityExistsException): JsonResponse {
         return JsonResponse(
             status = HttpStatus.CONFLICT.value(),
-            message = "FAILED_ADD_ZAKAT_FITRAH_EDITION_APPLICANT",
+            message = createError,
             error = exception.message
         )
     }
 
     @ExceptionHandler(NotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun notFoundExceptionHandler(exception: NotFoundException): JsonResponse {
+    fun notFoundExceptionHandler(
+        exception: NotFoundException,
+        request: HttpServletRequest
+    ): JsonResponse {
         return JsonResponse(
             status = HttpStatus.NOT_FOUND.value(),
-            message = "FAILED_GET_ZAKAT_FITRAH_EDITION_APPLICANT",
+            message = getMessageFromMethod(request.requestURI),
             error = exception.message
         )
     }
 
     private fun getMessageFromMethod(method: String): String {
         return when (method) {
-            HttpMethod.POST.name() -> "SUCCESS_ADD_ZAKAT_FITRAH_EDITION_APPLICANT"
-            HttpMethod.PUT.name() -> "FAILED_UPDATE_ZAKAT_FITRAH_EDITION_APPLICANT"
-            else -> "FAILED_DELETE_ZAKAT_FITRAH_EDITION_APPLICANT"
+            HttpMethod.POST.name() -> createError
+            HttpMethod.GET.name() -> readError
+            HttpMethod.PUT.name() -> updateError
+            else -> deleteError
         }
     }
 

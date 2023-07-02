@@ -27,7 +27,7 @@ open class BaseControllerAdvice(
     ): JsonResponse {
         return JsonResponse(
             status = HttpStatus.BAD_REQUEST.value(),
-            message = getMessageFromMethod(request.requestURI),
+            message = getMessageFromRequest(request),
             error = "Invalid type argument parameter"
         )
     }
@@ -40,7 +40,7 @@ open class BaseControllerAdvice(
     ): JsonResponse {
         return JsonResponse(
             status = HttpStatus.BAD_REQUEST.value(),
-            message = getMessageFromMethod(request.requestURI),
+            message = getMessageFromRequest(request),
             error = "Invalid request body format"
         )
     }
@@ -53,7 +53,7 @@ open class BaseControllerAdvice(
     ): JsonResponse {
         return JsonResponse(
             status = HttpStatus.BAD_REQUEST.value(),
-            message = getMessageFromMethod(request.requestURI),
+            message = getMessageFromRequest(request),
             error = exception.constraintViolations.first().message
         )
     }
@@ -76,13 +76,13 @@ open class BaseControllerAdvice(
     ): JsonResponse {
         return JsonResponse(
             status = HttpStatus.NOT_FOUND.value(),
-            message = getMessageFromMethod(request.requestURI),
+            message = getMessageFromRequest(request),
             error = exception.message
         )
     }
 
-    private fun getMessageFromMethod(method: String): String {
-        return when (method) {
+    open fun getMessageFromRequest(request: HttpServletRequest): String {
+        return when (request.method) {
             HttpMethod.POST.name() -> createError
             HttpMethod.GET.name() -> readError
             HttpMethod.PUT.name() -> updateError

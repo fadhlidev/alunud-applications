@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 
 open class BaseControllerAdvice(
-    private val createError: String = "FAILED_TO_CREATE_ENTITY",
-    private val readError: String = "FAILED_TO_GET_ENTITY",
-    private val updateError: String = "FAILED_TO_UPDATE_ENTITY",
-    private val deleteError: String = "FAILED_TO_DELETE_ENTITY"
+    protected val createError: String = "FAILED_TO_CREATE_ENTITY",
+    protected val readError: String = "FAILED_TO_GET_ENTITY",
+    protected val updateError: String = "FAILED_TO_UPDATE_ENTITY",
+    protected val deleteError: String = "FAILED_TO_DELETE_ENTITY"
 ) {
 
     @ExceptionHandler(value = [MethodArgumentTypeMismatchException::class])

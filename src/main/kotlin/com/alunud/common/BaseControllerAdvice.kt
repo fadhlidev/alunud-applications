@@ -2,6 +2,7 @@ package com.alunud.common
 
 import com.alunud.exception.EntityExistsException
 import com.alunud.exception.NotFoundException
+import com.alunud.exception.ProhibitionException
 import com.alunud.web.JsonResponse
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.ConstraintViolationException
@@ -76,6 +77,19 @@ open class BaseControllerAdvice(
     ): JsonResponse {
         return JsonResponse(
             status = HttpStatus.NOT_FOUND.value(),
+            message = getMessageFromRequest(request),
+            error = exception.message
+        )
+    }
+
+    @ExceptionHandler(ProhibitionException::class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    fun prohibitionExceptionHandler(
+        exception: ProhibitionException,
+        request: HttpServletRequest
+    ): JsonResponse {
+        return JsonResponse(
+            status = HttpStatus.FORBIDDEN.value(),
             message = getMessageFromRequest(request),
             error = exception.message
         )

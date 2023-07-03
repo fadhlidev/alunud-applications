@@ -55,7 +55,7 @@ open class BaseControllerAdvice(
         return JsonResponse(
             status = HttpStatus.BAD_REQUEST.value(),
             message = getMessageFromRequest(request),
-            error = exception.constraintViolations.first().message
+            error = exception.constraintViolations?.first()?.message ?: exception.message ?: "Something went wrong"
         )
     }
 

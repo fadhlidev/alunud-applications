@@ -14,7 +14,7 @@ data class User(
     var email: String?,
     var password: String,
 
-    @field:ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.REMOVE])
+    @field:ManyToMany(fetch = FetchType.EAGER)
     @field:JoinTable(
         name = "users_roles",
         joinColumns = [JoinColumn(
